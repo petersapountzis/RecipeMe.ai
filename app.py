@@ -7,9 +7,9 @@ app = Flask(__name__)
 app.secret_key = 'zh6songlyepo36e'
 protein, cals, ingredients, servings = None, None, None, None
 
-# @app.route("/")
-# def hello_world():
-    # return render_template('/index.html')
+@app.route("/")
+def home():
+    return render_template('/home.html')
 
 @app.route('/form', methods =["GET", "POST"])
 def getFormData():
@@ -23,6 +23,25 @@ def getFormData():
         return redirect(url_for('getGPTResponse'))
     if request.method == 'GET':
         return render_template('/index.html')
+
+def extract_recipe_info(recipe_string):
+    name_pattern = r"##Name##(.*?)##Name##"
+    ingredients_pattern = r"##Ingredients##(.*?)##Directions##"
+    directions_pattern = r"##Directions##(.*?)##Nutrition Facts##"
+    nutrition_facts_pattern = r"##Nutrition Facts##(.*)"
+
+    name_match = re.search(name_pattern, recipe_string, re.DOTALL)
+    ingredients_match = re.search(ingredients_pattern, recipe_string, re.DOTALL)
+    directions_match = re.search(directions_pattern, recipe_string, re.DOTALL)
+    nutrition_facts_match = re.search(nutrition_facts_pattern, recipe_string, re.DOTALL)
+
+    recipe_name = name_match.group(1).strip() if name_match else None
+    ingredients = ingredients_match.group(1).strip() if ingredients_match else None
+    directions = directions_match.group(1).strip() if directions_match else None
+    nutrition_facts = nutrition_facts_match.group(1).strip() if nutrition_facts_match else None
+
+    return recipe_name, ingredients, directions, nutrition_facts
+
 
 
 @app.route('/recipe', methods =["GET", "POST"])
@@ -39,29 +58,19 @@ def getGPTResponse():
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "You are a meal generator. I am a user who wants a recipe. I will give you OPTIONAL information about what I want in my recipe. If no servings are specified, assume just 1 serving. For all other fields, if no data is provided, you have jurisdiction over it. I want you to create a recipe for me. It should be a singular recipe. I want a name for the recipe labeled before and after with ##Name##. For example: ##Name## Chicken Curry ##Name##. I want an ingredients section labeled ##Ingredients##, a directions section labeled ##Directions##, and a nutrition facts section labeled ##Nutrition Facts##."},
+            {"role": "system", "content": "You are a meal generator. I am a user who wants a recipe. I will give you OPTIONAL information about what I want in my recipe. If no servings are specified, assume just 1 serving. For all other fields, if no data is provided, you have jurisdiction over it. I want you to create a recipe for me. It should be a singular recipe. I want a name for the recipe labeled before and after with ##Name##. For example: ##Name## Chicken Curry ##Name##, this will follow the same pattern for all other sections. I want an ingredients section surrounded by ##Ingredients## tag, a directions section surrouned ##Directions## tag, and a nutrition facts section surrounded ##Nutrition Facts## tag."},
             {"role": "user", "content": prompt}
         ]
     )
     cleaned_response = completion['choices'][0]['message']['content']
 
-    match = re.search(r'##Name##(.*)##Name##', cleaned_response)
-    if match:
-        dish_name = match.group(1)
-
-    img = openai.Image.create(
-        prompt= dish_name,
-        n=1,
-        size="1024x1024"
-    )
-    image = img['images'][0]['url']
-    return render_template('/recipe.html', response=cleaned_response, image=image)
+    name, ingredients, directions, nutrition_facts = extract_recipe_info(cleaned_response)
+    return render_template('/recipe.html', name=name, ingredients=ingredients, directions=directions, nutrition_facts=nutrition_facts)
 
 
 
 
 
-       
 
 if __name__ == '__main__':
     app.run(debug=True)
