@@ -7,9 +7,9 @@ app = Flask(__name__)
 app.secret_key = 'zh6songlyepo36e'
 protein, cals, ingredients, servings = None, None, None, None
 
-# @app.route("/")
-# def hello_world():
-    # return render_template('/index.html')
+@app.route("/")
+def home():
+    return render_template('/home.html')
 
 @app.route('/form', methods =["GET", "POST"])
 def getFormData():
@@ -52,9 +52,10 @@ def getGPTResponse():
     img = openai.Image.create(
         prompt= dish_name,
         n=1,
-        size="1024x1024"
+        size="256x256"
     )
-    image = img['images'][0]['url']
+    image = img['data'][0]['url']
+    print(image)
     return render_template('/recipe.html', response=cleaned_response, image=image)
 
 
