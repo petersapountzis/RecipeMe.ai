@@ -1,8 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #F1DEC9;
+  padding: 60px;
+  font-family: 'Poppins', sans-serif;
+  background-color: #F1DEC9;
+  color: white;
   }
 
   .container {
@@ -21,21 +23,29 @@ body {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-    color: ;
+    color: #F7F1E5;
   }
 
   .input-group input {
-    width: 100%;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
+    width: 95%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #e9e9e9;
+    color: #333;
+  }
+
+  .input-group input:focus {
+    outline: none;
+    background-color: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
   }
 
   .btn {
     font-family: 'Poppins', sans-serif;
     display: inline-block;
     padding: 10px 20px;
-    background-color: #4CAF50;
+    background-color: #8D7B68;
     color: #fff;
     text-decoration: none;
     border-radius: 5px;
