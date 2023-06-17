@@ -1,9 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 body {
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('images/home.jpeg') center/cover no-repeat fixed;
+  justify-content: flex-start;
+  align-items: flex-end;
   padding: 60px;
   font-family: 'Poppins', sans-serif;
-  background-color: #F1DEC9;
   color: white;
   }
 
@@ -11,8 +13,9 @@ body {
     max-width: 400px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #C8B6A6;
     border-radius: 5px;
+    /* background-color: rgba(200, 182, 166, 0.5); */
+    background-color: rgba(255, 255, 255, 0.3);
   }
 
   .input-group {
@@ -43,10 +46,12 @@ body {
 
   .btn {
     font-family: 'Poppins', sans-serif;
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #8D7B68;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 5px;
+    border-radius: 15px; 
+    width: 100px; 
+    height: 30px; 
+    border: none; 
+    background-color: #877362; 
+    color: white; 
+    font-size: 16px;
+    margin-top: 10px;
   }
