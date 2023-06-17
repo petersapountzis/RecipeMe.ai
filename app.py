@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello_world():
-    return render_template('index.html')
+    return render_template('/index.html')
 
 
 
@@ -18,7 +18,7 @@ def getGPTResponse(prompt):
     return response.choices[0].text.strip()
 
 
-@app.route('/', methods =["GET", "POST"])
+# @app.route('/', methods =["GET", "POST"])
 def getFormData():
     protein = request.form.get("protein")
     cals = request.form.get("calories")
