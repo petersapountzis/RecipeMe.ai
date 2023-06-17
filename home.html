@@ -4,29 +4,20 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I'm a Photographer</title>
+    <title>RecipeMe.Ai Home</title>
     <!-- font awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel = "stylesheet" href = "style.css">
+    <link rel = "stylesheet" href = "homeStyle.css">
 </head>
 <body>
-    
     <!-- header -->
     <header id = "header" class = "vh-100 flex">
         <div class = "container">
             <div class = "header-content">
-                <h1>I'm a<br>
-                    <span class = "typewrite" data-loop = "yes" data-speed = "100" data-delay = "2000" data-words = '["photographer", "videographer", "video editor"]'></span></br>
+                <h1 style="font-size: 90px;">Welcome to RecipeMe.ai<br>
+                    <span style="font-size: 70px;" class = "typewrite" data-loop = "yes" data-speed = "100" data-delay = "2000" data-words = '["Macro Friendly", "Diverse Cuisines", "Recipes Made Easy"]'></span></br>
                 </h1>
-                <h3>Davud Khalilov</h3>
-
-                <ul class = "social-links">
-                    <li>
-                        <a href = "https://www.instagram.com/shotbydavud/" class = "flex">
-                            <i class = "fab fa-instagram"></i>
-                        </a>
-                    </li>
-                </ul>
+                <h3>Meal Ideas Made Easy</h3>
             </div>
         </div>
     </header>
@@ -40,12 +31,11 @@
                     </div>
                     <div class = "about-right">
                         <div class = "title">
-                            <h2>About Me</h2>
+                            <h2>About RecipeMe.Ai</h2>
                         </div>
-                        <p class = "lead">Photographer and Videographer based in Santa Barbara, California. Currently studying data science at Santa Barbara City College. On a journey to become a well-rounded and experienced photographer and videographer. My personal work consists of shooting 35mm film and recently medium format film. </p>
-                        <p class = "lead">Checkout his recent works and experiences below. His work is more of his passion than proffesion.</p>
-                        <a href = "#work" class = "btn-down">
-                            <i class = "fas fa-chevron-down"></i>
+                        <p class = "lead"> Explain how RecipeMe.Ai Works </p>
+                        <a href="index.html">
+                            <button style="border-radius: 20px; width: 150px; height: 50px; border: none; background-color: #C8B6A6; color: white; font-size: 16px; font-family: 'Poppins', sans-serif;">Get Started</button>
                         </a>
                     </div>
                 </div>
@@ -53,33 +43,12 @@
         </section>
         <!-- end of about section -->
 
-        <!-- work section -->
-        <section id = "work" class = "vh-100 flex py-7">
-            <div class = "container">
-                <div class = "work-content">
-                    <div class = "title">
-                        <h2>what am i doing?</h2>
-                    </div>
-                    <ul class = "work-top grid">
-                        <li class = "lead"> Cinematic Spec Ads and videos for your social media and/or website. Videos have been proven to have a large conversion rate of visitors to clients when added to websites.</li>
-                        <li class = "lead"> Professional portraits for families, graduating students, and your profile pictures</li>
-                        <li class = "lead"> Real estate photography and videography. Different packages offering different content for your property.</li>
-                        <li class = "lead"> No two projects are the same. Every project requires it own creative process and execution. For pricing and rates, contact me with your desired results and budget.</li>
-                    </ul>
-                    <a href = "#portfolio" class = "btn-down btn-down-white">
-                        <i class = "fas fa-chevron-down"></i>
-                    </a>
-                </div>
-            </div>
-        </section>
-        <!-- end of work section -->
-
         <!-- portfolio section -->
         <section id = "portfolio" class = "vh-100 py-7">
             <div class = "container">
                 <div class = "portfolio-content">
                     <div class = "title">
-                        <h2>my latest work</h2>
+                        <h2>Some of our generated meals</h2>
                         <a href = "#contact" class = "btn-down">
                             <i class = "fas fa-chevron-down"></i>
                         </a>
@@ -87,98 +56,32 @@
 
                     <div class = "portfolio-grid grid">
                         <div><img src = "images/waves.jpg"></div>
-                        <div class = "video1">
-                            <video controls autoplay muted loop>
-                                <source src="videos/mooseCoachEdit.mp4">
-                             </video>
-                        </div>
+                        <div><img src = "images/plane.jpg"></div>
                         <div><img src = "images/redcar.jpg"></div>
                         <div><img src = "images/portrait1.jpg"></div>
                         <div><img src = "images/sancho.jpg"></div>
                         <div><img src = "images/plane.jpg"></div>
-                        <div>
-                            <video controls autoplay muted loop>
-                                <source src="videos/dtd.mp4">
-                             </video>
-                        </div>
+                        <div><img src = "images/plane.jpg"></div>
                     </div>
                 </div>
             </div>
         </section>
         <!-- end of portfolio section -->
-
-        <!-- contact section -->
-        <section id = "contact" class = "py-7">
-            <div class = "container">
-                <div class = "contact-content flex">
-                    <div class = "contact-left">
-                        <div class="title">
-                            <h2>contact me</h2>
-                        </div>
-                        <p class = "lead"><i class = "fas fa-phone-alt"></i> 650 862 5515</p>
-                        <p class = "lead"><i class = "fas fa-envelope"></i> khalilov.davud@gmail.com</p>
-                        <form action="send_email.php" method="post">
-                            <label for="name">Name:</label>
-                            <input type="text" class = "form-control" id="name" name="name" required>
-                            <label for="email">Email:</label>
-                            <input type="email" class = "form-control" id="email" name="email" required>
-                            <label for="message">Message:</label>
-                            <textarea id="message" class = "form-control" name="message" required></textarea>
-                            <input type="submit" class = "btn-submit btn"value="Send">
-                            <!-- <input type = "text" class = "form-control" placeholder="Your name here ...">
-                            <input type = "email" class = "form-control" placeholder="Your email here">
-                            <input type = "message" class = "form-control1" placeholder="Text">
-                            <input type = "submit" class = "btn-submit btn" value = "Submit"> -->
-                        </form>
-                    </div>
-
-                    <div class = "contact-right">
-                        <img src = "images/about.jpg" alt = "contact image">
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- end of contact section -->
-
-        <!-- instagram section -->
-        <section id = "insta" class = "py-7">
-            <div class = "container">
-                <div class = "insta-content">
-                    <div class = "title">
-                        <h2>instagram</h2>
-                        <p ><a style="color: aliceblue;" href = "https://www.instagram.com/shotbydavud/">@shotbydavud</a></p>
-                        <a href = "#footer" class = "btn-down btn-down-white">
-                            <i class = "fas fa-chevron-down"></i>
-                        </a>
-                    </div>
-                    <div class = "insta-grid grid">
-                        <div><img src = "images/mission.jpg"></div>
-                        <div><img src = "images/van.jpg"></div>
-                        <div><img src = "images/tanner.jpg"></div>
-                        <div><img src = "images/fer.jpg"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- end of instagram section -->
     </main>
     <!-- footer -->
     <footer id = "footer" class = "py-7">
         <div class = "container">
             <div class = "footer-content">
                 <div>
-                    <h3>DAVUD KHALILOV</h3>
+                    <h3>RecipeMe.ai</h3>
                     <div><img src = "images/about1.jpg"></div>
                 </div>
 
                 <div>
                     <h3>Links</h3>
                     <ul class = "flex">
-                        <li><a href = "#about">About Me</a></li>
-                        <li><a href = "#work">Work</a></li>
-                        <li><a href = "#portfolio">Portfolio</a></li>
-                        <li><a href = "#contact">Contact Me</a></li>
-                        <li><a href = "https://www.instagram.com/shotbydavud/">Instagram</a></li>
+                        <li><a href = "#about">About</a></li>
+                        <li><a href = "#portfolio">Meals</a></li>
                     </ul>
                 </div>
             </div>
@@ -188,6 +91,6 @@
 
 
     <!-- typewriting js -->
-    <script src = "typewriting-master/typewriting.js"></script>
+    <script src="typewriting-master/typewriting.js"></script>
 </body>
 </html>
