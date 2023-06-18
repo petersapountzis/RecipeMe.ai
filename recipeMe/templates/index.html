@@ -6,7 +6,6 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='style.css') }}"
     />
-    <script src="{{ url_for('static', filename='/js/loading.js')}}"></script>
   </head>
   <body>
     <div id="original-content">
@@ -73,4 +72,5 @@
       <p>Loading...</p>
     </div>
   </body>
+  <script src="{{ url_for('static', filename='/js/loading.js')}}"></script>
 </html>

@@ -67,17 +67,17 @@ def library():
 def getFormData():
     if request.method == 'POST':
         # Form has been submitted, store the data
-        session[protein] = request.form.get("protein")
-        session[cals] = request.form.get("calories")
-        session[ingredients] = request.form.get("ingredients")
-        session[servings] = request.form.get("servings")
-        session[cuisine] = request.form.get("cuisine")
-
-        # return redirect(url_for('getGPTResponse'))
+        print(request.form)  # This line is new; it prints the form data
+        session['protein'] = request.form.get("protein")
+        session['cals'] = request.form.get("calories")
+        session['ingredients'] = request.form.get("ingredients")
+        session['servings'] = request.form.get("servings")
+        session['cuisine'] = request.form.get("cuisine")
 
         redirect_url = url_for('getGPTResponse')
-        print(redirect_url)
-        return jsonify({"redirect_url": redirect_url})   
+        print('redirect ')
+        return jsonify({"redirect_url": redirect_url})
+        
     if request.method == 'GET':
         return render_template('index.html')
 
