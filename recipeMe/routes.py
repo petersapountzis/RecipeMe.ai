@@ -1,11 +1,13 @@
 from flask import request, render_template, session, url_for, redirect, flash, request
-from recipeMe import app, db, bcrypt
+from recipeMe import app, db, bcrypt 
 from recipeMe.models import User, Recipe
 from recipeMe.login import RegistrationForm, LoginForm
 import openai
 from recipeMe.config import API_KEY_OPENAI
 import re
-from flask_login import login_user, current_user, logout_user, login_required, 
+from flask_login import login_user, current_user, logout_user, login_required
+import json
+
 
 
 
@@ -31,6 +33,8 @@ def register():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    token = request.form.get('csrf_token')
+    
     if current_user.is_authenticated:
         return redirect(url_for('landing'))
     form = LoginForm()
@@ -54,7 +58,7 @@ def landing():
     return render_template('landing.html')
 
 @app.route("/library")
-@login_required
+# @login_required
 def library():
     return render_template('library.html')
 
@@ -70,7 +74,7 @@ def getFormData():
         session[cuisine] = request.form.get("cuisine")
         return redirect(url_for('getGPTResponse'))
     if request.method == 'GET':
-        return render_template('/index.html')
+        return render_template('index.html')
 
 def extract_recipe_info(recipe_string):
     name_pattern = r"##Name##(.*?)##Name##"
@@ -117,8 +121,12 @@ def getGPTResponse():
     cleaned_response = completion['choices'][0]['message']['content']
 
     name, ingredients, directions, nutrition_facts = extract_recipe_info(cleaned_response)
-    ingredientsList = ingredients_to_list(ingredients)
-    return render_template('/recipe.html', name=name, ingredients=ingredientsList, directions=directions, nutrition_facts=nutrition_facts)
+    # ingredientsList = ingredients_to_list(ingredients)
+    ingredientsList = ['2 boneless, skinless chicken breasts', '1/4 cup olive oil', '3 tablespoons balsamic vinegar', '1 tablespoon honey', '1/2 teaspoon dried oregano', '1/4 teaspoon salt', '1/8 teaspoon black pepper', '4 cups mixed greens', '1/2 cup cherry tomatoes, halved', '1/4 cup red onion, thinly sliced', '1/4 cup feta cheese, crumbled']
+    ingredientsList = list(ingredientsList)
+
+    json_ingredients = json.dumps(ingredientsList)
+    return render_template('recipe.html',ingredients=json_ingredients)
 
 
 

@@ -1,57 +1,58 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
 body {
-  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('../images/home.jpeg') center/cover no-repeat fixed;
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+    url("../static/images/home.jpeg") center/cover no-repeat fixed;
   justify-content: flex-start;
   align-items: flex-end;
   padding: 60px;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   color: white;
-  }
+}
 
-  .container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    border-radius: 5px;
-    /* background-color: rgba(200, 182, 166, 0.5); */
-    background-color: rgba(255, 255, 255, 0.3);
-  }
+.container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 5px;
+  /* background-color: rgba(200, 182, 166, 0.5); */
+  background-color: rgba(255, 255, 255, 0.3);
+}
 
-  .input-group {
-    margin-bottom: 10px;
-  }
+.input-group {
+  margin-bottom: 10px;
+}
 
-  .input-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #F7F1E5;
-  }
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #f7f1e5;
+}
 
-  .input-group input {
-    width: 95%;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #e9e9e9;
-    color: #333;
-  }
+.input-group input {
+  width: 95%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #e9e9e9;
+  color: #333;
+}
 
-  .input-group input:focus {
-    outline: none;
-    background-color: #fff;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-  }
+.input-group input:focus {
+  outline: none;
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
 
-  .btn {
-    font-family: 'Poppins', sans-serif;
-    border-radius: 15px; 
-    width: 100px; 
-    height: 30px; 
-    border: none; 
-    background-color: #877362; 
-    color: white; 
-    font-size: 16px;
-    margin-top: 10px;
-  }
+.btn {
+  font-family: "Poppins", sans-serif;
+  border-radius: 15px;
+  width: 100px;
+  height: 30px;
+  border: none;
+  background-color: #877362;
+  color: white;
+  font-size: 16px;
+  margin-top: 10px;
+}

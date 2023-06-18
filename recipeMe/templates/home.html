@@ -7,7 +7,7 @@
     <title>RecipeMe.Ai Home</title>
     <!-- font awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel = "stylesheet" href = "../static/homeStyle.css">
+    <link rel = "stylesheet" href = "{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <!-- header -->
@@ -27,14 +27,14 @@
             <div class = "container">
                 <div class = "about-content grid">
                     <div class = "about-left">
-                        <img src = "images/about1.jpg" alt = "">
+                        <img src = "{{ url_for('static', filename='images/home.jpg') }}" alt = "">
                     </div>
                     <div class = "about-right">
                         <div class = "title">
                             <h2>About RecipeMe.Ai</h2>
                         </div>
                         <p class = "lead"> Explain how RecipeMe.Ai Works </p>
-                        <a href="../templates/index.html" target="_blank">
+                        <a href="{{ url_for('getFormData') }}" target="_blank">
                             <button style="border-radius: 20px; width: 150px; height: 50px; border: none; background-color: #C8B6A6; color: white; font-size: 16px; font-family: 'Poppins', sans-serif;">Get Started</button>
                         </a>
                     </div>
@@ -55,13 +55,13 @@
                     </div>
 
                     <div class = "portfolio-grid grid">
-                        <div><img src = "images/waves.jpg"></div>
-                        <div><img src = "images/plane.jpg"></div>
-                        <div><img src = "images/redcar.jpg"></div>
-                        <div><img src = "images/portrait1.jpg"></div>
-                        <div><img src = "images/sancho.jpg"></div>
-                        <div><img src = "images/plane.jpg"></div>
-                        <div><img src = "images/plane.jpg"></div>
+                        <div><img src = "{{ url_for('static', filename='images/food2.jpeg') }}" ></div>
+                        <div><img src = "{{ url_for('static', filename='images/food2.jpeg') }}"></div>
+                        <div><img src = "{{ url_for('static', filename='images/food2.jpeg') }}"></div>
+                        <div><img src = "{{ url_for('static', filename='images/food2.jpeg') }}"></div>
+                        <div><img src = "{{ url_for('static', filename='images/food2.jpeg') }}"></div>
+                        <div><img src = "{{ url_for('static', filename='images/food2.jpeg') }}"></div>
+                        <div><img src = "{{ url_for('static', filename='images/food2.jpeg') }}"></div>
                     </div>
                 </div>
             </div>
@@ -74,7 +74,7 @@
             <div class = "footer-content">
                 <div>
                     <h3>RecipeMe.ai</h3>
-                    <div><img src = "images/about1.jpg"></div>
+                    <div><img src = "{{ url_for('static', filename='images/food2.jpg') }}"></div>
                 </div>
 
                 <div>
