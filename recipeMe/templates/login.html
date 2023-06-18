@@ -7,11 +7,22 @@
       type="text/css"
       href="{{ url_for('static', filename='loginStyle.css') }}"
     />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='header.css') }}"
+    />
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
     </style>
   </head>
   <body>
+    <header class="header">
+      <div class="logo">RecipeMe.ai</div>
+      <nav class="nav-links">
+        <a href="{{ url_for('login')}}">Login</a>
+        <a href="{{ url_for('register')}}">Sign Up</a>
+      </nav>
+    </header>
     <div class="login-container">
       <div class="login-form">
         <h2>Login</h2>
@@ -26,24 +37,23 @@
             {{ form.password }}
           </div>
           <div class="form-group">
-            <div class = "remember">
-              <p>{{ form.remember.label }} {{ form.remember }}</p> 
-              <a href = "{{ url_for('register') }}">
+            <div class="remember">
+              <p>{{ form.remember.label }} {{ form.remember }}</p>
+              <a href="{{ url_for('register') }}">
                 <span class="register-link">Register</span>
               </a>
             </div>
           </div>
           <div class="form-group">
-            <div class = "submit-btn">
-              {{ form.submit() }}
-            </div>
+            <div class="submit-btn">{{ form.submit() }}</div>
           </div>
         </form>
       </div>
       <div class="blank-box">
-        <p class="message">Login to save your generated meals to your library!</p>
+        <p class="message">
+          Login to save your generated meals to your library!
+        </p>
       </div>
     </div>
-
   </body>
 </html>
