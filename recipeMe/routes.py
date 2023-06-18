@@ -102,6 +102,8 @@ def extract_recipe_info(recipe_string):
 def ingredients_to_list(ingredients):
     # Split the string by commas and strip whitespaces
     ingredients_list = [ingredient.strip() for ingredient in ingredients.split('-')]
+    print(ingredients_list)
+    ingredients_list = ingredients_list[1:]
     return ingredients_list
 
 def parse_instructions(instructions):

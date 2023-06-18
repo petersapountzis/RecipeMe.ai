@@ -50,11 +50,14 @@
         <header class="title">
           <h2>Directions</h2>
         </header>
+        <div>
+          <ul>
+            {% for step in directions %}
+            <li>{{ step }}</li>
+            {% endfor %}
+          </ul>
+        </div>
       </section>
     </main>
-
-    <p>{{directions }}</p>
-    <br />
-    <p>{{nutrition}}</p>
   </body>
 </html>

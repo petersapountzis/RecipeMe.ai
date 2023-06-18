@@ -136,3 +136,9 @@ h1 {
   background-color: #f2f2f2;
   border-radius: 5px;
 }
+
+ul {
+  margin: 20px;
+  list-style-type: none;
+  line-height: 1.5;
+}
