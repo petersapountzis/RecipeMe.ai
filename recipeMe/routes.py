@@ -75,7 +75,7 @@ def getFormData():
         session['cuisine'] = request.form.get("cuisine")
 
         redirect_url = url_for('getGPTResponse')
-        print('redirect ')
+        print('redirect')
         return jsonify({"redirect_url": redirect_url})
         
     if request.method == 'GET':

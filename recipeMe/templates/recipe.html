@@ -33,22 +33,6 @@
           <h2>Ingredients</h2>
         </header>
         <ul id="listContainer" class="ingredient-container">
-          <!-- <script type="text/javascript">
-            window.onload = function () {
-              var ingredients = JSON.parse("{{ ingredients|tojson|safe }}");
-              console.log(ingredients);
-
-              var listContainer = document.getElementById("listContainer");
-
-              for (var i = 0; i < ingredientsList.length; i++) {
-                var listItem = document.createElement("li");
-                listItem.className = "item";
-                listItem.textContent = ingredientsList[i];
-                listContainer.appendChild(listItem);
-              }
-            };
-          </script> -->
-
           {% for ingredient in ingredients %}
           <li>{{ ingredient }}</li>
           {% endfor %}
@@ -66,7 +50,5 @@
     <p>{{directions }}</p>
     <br />
     <p>{{nutrition}}</p>
-
-    <img src="image" />
   </body>
 </html>
