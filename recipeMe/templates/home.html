@@ -27,13 +27,14 @@
             <div class = "container">
                 <div class = "about-content grid">
                     <div class = "about-left">
-                        <img src = "{{ url_for('static', filename='images/home.jpg') }}" alt = "">
+                        <p>powered by</p>
+                        <img src = "{{ url_for('static', filename='images/OpenAI.png') }}" alt = "">
                     </div>
                     <div class = "about-right">
                         <div class = "title">
                             <h2>About RecipeMe.Ai</h2>
                         </div>
-                        <p class = "lead"> Explain how RecipeMe.Ai Works </p>
+                        <p class = "lead"> RecipeMe.ai is the first macro-tailored ai powered recipe generator. We give the user the priveledge to specifiy their prefered cuisine, amount of protein, calories, servings, as well as any ingredients that may want to use</p>
                         <a href="{{ url_for('getFormData') }}" target="_blank">
                             <button style="border-radius: 20px; width: 150px; height: 50px; border: none; background-color: #C8B6A6; color: white; font-size: 16px; font-family: 'Poppins', sans-serif;">Get Started</button>
                         </a>
@@ -74,9 +75,7 @@
             <div class = "footer-content">
                 <div>
                     <h3>RecipeMe.ai</h3>
-                    <div><img src = "{{ url_for('static', filename='images/food2.jpg') }}"></div>
                 </div>
-
                 <div>
                     <h3>Links</h3>
                     <ul class = "flex">

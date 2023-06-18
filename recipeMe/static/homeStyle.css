@@ -24,6 +24,7 @@ body {
 
 button,
 .btn {
+  margin-top: 30px;
   cursor: pointer;
   border: none;
   background: transparent;
@@ -125,8 +126,11 @@ h3 {
 
 /* about */
 .about-left {
-  margin-bottom: 4rem;
-  height: 480px;
+  width: 70%;
+  margin-left: 30px;
+  margin-top: 100px;
+  margin-bottom: 2rem;
+  height: 200px;
   overflow: hidden;
 }
 /* button down and title -reusable */
