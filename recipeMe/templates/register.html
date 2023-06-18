@@ -5,38 +5,43 @@
     <link
       rel="stylesheet"
       type="text/css"
-      href="{{ url_for('static', filename='login.css') }}"
+      href="{{ url_for('static', filename='register.css') }}"
     />
   </head>
   <body>
-    <div class="form-container">
-      <h2>Register</h2>
-      <form method="POST">
-        {{ form.csrf_token }} {{ form.hidden_tag() }}
-
-        <label for="username">{{ form.username.label }}</label>
-        {{ form.username(id="username") }} {% for error in form.username.errors
-        %}
-        <span class="error">{{ error }}</span>
-        {% endfor %}
-
-        <label for="email">{{ form.email.label }}</label>
-        {{ form.email(id="email") }} {% for error in form.email.errors %}
-        <span class="error">{{ error }}</span>
-        {% endfor %}
-
-        <label for="password">{{ form.password.label }}</label>
-        {{ form.password(id="password") }} {% for error in form.password.errors
-        %}
-        <span class="error">{{ error }}</span>
-        {% endfor %}
-
-        <label for="confirm_password">{{ form.confirm_password.label }}</label>
-        {{ form.confirm_password(id="confirm_password") }} {% for error in
-        form.confirm_password.errors %}
-        <span class="error">{{ error }}</span>
-        {% endfor %} {{ form.submit() }}
-      </form>
+    <div class = "register">
+      <div class="form-container">
+        <h2>Register</h2>
+        <form method="POST">
+          {{ form.csrf_token }} {{ form.hidden_tag() }}
+  
+          <label for="username">{{ form.username.label }}</label>
+          {{ form.username(id="username") }} {% for error in form.username.errors
+          %}
+          <span class="error">{{ error }}</span>
+          {% endfor %}
+  
+          <label for="email">{{ form.email.label }}</label>
+          {{ form.email(id="email") }} {% for error in form.email.errors %}
+          <span class="error">{{ error }}</span>
+          {% endfor %}
+  
+          <label for="password">{{ form.password.label }}</label>
+          {{ form.password(id="password") }} {% for error in form.password.errors
+          %}
+          <span class="error">{{ error }}</span>
+          {% endfor %}
+  
+          <label for="confirm_password">{{ form.confirm_password.label }}</label>
+          {{ form.confirm_password(id="confirm_password") }} {% for error in
+          form.confirm_password.errors %}
+          <span class="error">{{ error }}</span>
+          {% endfor %} 
+          <div class="btn">
+            {{ form.submit() }}
+          </div>
+        </form>
+      </div>
     </div>
   </body>
 </html>
