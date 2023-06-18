@@ -1,0 +1,111 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+.login-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100vh; /* Adjust the height of the container */
+  }
+.login-form {
+    font-family: "Poppins", sans-serif;
+    width: 300px;
+    margin-right: 2px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f2f2f2;
+}
+
+.login-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    margin-right: 5px;
+
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 5px;
+    font-size: 16px;
+}
+
+.form-group input[type="checkbox"] {
+    display: inline;
+    width: auto;
+    margin-right: 5px;
+}
+
+.form-group .submit-btn input[type="submit"]{
+    background-color: #C8B6A6;
+    font-family: "Poppins", sans-serif;
+    text-align: center;
+}
+
+.form-group .submit-btn input[type="submit"]{
+    background-color: #C8B6A6;
+    color: white;
+    padding: 10px 2px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: "Poppins", sans-serif;
+}
+
+.form-group .submit-btn:hover{
+    font-family: "Poppins", sans-serif;
+}
+  
+.blank-box {
+    width: 300px;
+    height: 484px;
+    background-color: #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.message {
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 30px;
+  font-size: 25px;
+}
+
+.remember {
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+  }
+
+a, a:visited {
+    color: #000000; /* Replace with the desired color value */
+    text-decoration: none;
+}
+
+a{
+    margin-top: 16px;
+}
+
+.register-link {
+    margin-top: 16px;
+    margin-left: 10px;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    align-items: right;
+    justify-content: right;
+  }
+  
+.register-link:hover {
+    text-decoration: underline;
+    
+}
