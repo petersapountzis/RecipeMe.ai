@@ -15,6 +15,13 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='recipeStyle.css') }}"
     />
+    <!-- <style>
+      #header {
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("images/food2.jpeg") center/cover no-repeat fixed;
+        justify-content: space-between;
+        align-items: center;
+      }
+    </style> -->
     <title>Recipe</title>
   </head>
   <body>
@@ -23,12 +30,11 @@
       <div class="container">
         <div class="header-content">
           <h1>{{ name }}</h1>
-          <img src="{{ image_url }}" />
         </div>
       </div>
     </header>
     <main>
-      <section id="ingredients" class="vh-100">
+      <section id="ingredients" class="vh-101">
         <header class="title">
           <h2>Ingredients</h2>
         </header>
