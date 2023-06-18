@@ -8,8 +8,19 @@
     <!-- font awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel = "stylesheet" href = "../static/homeStyle.css">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='header.css') }}"
+    />
 </head>
 <body>
+    <header class="header">
+        <div class="logo">RecipeMe.ai</div>
+        <nav class="nav-links">
+          <a href="{{ url_for('login')}}">Login</a>
+          <a href="{{ url_for('register')}}">Sign Up</a>
+        </nav>
+      </header>
     <!-- header -->
     <header id = "header" class = "vh-100 flex">
         <div class = "container">

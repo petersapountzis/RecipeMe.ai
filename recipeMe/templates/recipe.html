@@ -15,6 +15,10 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='recipeStyle.css') }}"
     />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='header.css') }}"
+    />
     <!-- <style>
       #header {
         background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("images/food2.jpeg") center/cover no-repeat fixed;
@@ -25,6 +29,13 @@
     <title>Recipe</title>
   </head>
   <body>
+    <header class="header">
+      <div class="logo">RecipeMe.ai</div>
+      <nav class="nav-links">
+        <a href="{{ url_for('login')}}">Login</a>
+        <a href="{{ url_for('register')}}">Sign Up</a>
+      </nav>
+    </header>
     <!-- header -->
     <header id="header" class="vh-100 flex">
       <div class="container">
