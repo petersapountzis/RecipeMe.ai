@@ -104,6 +104,18 @@ def ingredients_to_list(ingredients):
     ingredients_list = [ingredient.strip() for ingredient in ingredients.split('-')]
     return ingredients_list
 
+def parse_instructions(instructions):
+    # instructions = re.split(r'(\d+\.\s)', instructions_string)
+    # # instructions = list(filter(None, instructions)) # removes empty strings
+    # # pairs = [(instructions[i], instructions[i+1].strip()) for i in range(0, len(instructions), 2)]
+    # print(instructions)
+    # return instructions
+    if instructions is None:
+        return []
+    # Split by digit-period-space pattern, keep the digit and period with the instruction
+    return re.split('\s(?=\d+\.)', instructions)
+
+
 protein, cals, ingredients, servings, cuisine = '', '', '', '', ''
 @app.route('/recipe', methods =["GET", "POST"])
 def getGPTResponse():
@@ -127,6 +139,7 @@ def getGPTResponse():
 
     name, ingredients, directions, nutrition_facts = extract_recipe_info(cleaned_response)
     ingredientsList = ingredients_to_list(ingredients)
+    instructionsList = parse_instructions(directions)
     image_prompt = f'{name}, food photography, morning light, 15mm'
     image = openai.Image.create(
         prompt=image_prompt,
@@ -138,7 +151,7 @@ def getGPTResponse():
     json_ingredients = {
         "ingredients": json.dumps(ingredientsList)
     }
-    return render_template('recipe.html',ingredients=ingredientsList, name=name , directions=directions, nutrition_facts=nutrition_facts, image_url=image_url)
+    return render_template('recipe.html',ingredients=ingredientsList, name=name , directions=instructionsList, nutrition_facts=nutrition_facts, image_url=image_url)
 
 
 
