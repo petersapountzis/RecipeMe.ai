@@ -12,7 +12,7 @@
     <div class="form-container">
       <h2>Register</h2>
       <form method="POST">
-        {{ form.hidden_tag() }}
+        {{ form.csrf_token }} {{ form.hidden_tag() }}
 
         <label for="username">{{ form.username.label }}</label>
         {{ form.username(id="username") }} {% for error in form.username.errors

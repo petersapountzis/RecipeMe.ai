@@ -1,10 +1,11 @@
-from flask import request, render_template, session, url_for, redirect, flash
-from recipeMe import app
+from flask import request, render_template, session, url_for, redirect, flash, request
+from recipeMe import app, db, bcrypt
 from recipeMe.models import User, Recipe
 from recipeMe.login import RegistrationForm, LoginForm
 import openai
 from recipeMe.config import API_KEY_OPENAI
 import re
+from flask_login import login_user, current_user, logout_user, login_required, 
 
 
 
@@ -15,23 +16,47 @@ def home():
 
 @app.route("/register", methods =["GET", "POST"])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('landing'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        flash(f'Account created for {form.username.data}!', 'success')
-        return redirect(url_for('/'))
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(username = form.username.data, email = form.email.data, password = hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        flash('Your account has been created! You are now able to login.', 'success')
+        return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('landing'))
     form = LoginForm()
     if form.validate_on_submit():
-        if form.email.data == 'admin@blog.com' and form.password.data == 'password':
-            flash('You have been logged in!', 'success')
-            return redirect(url_for('home'))
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
+            next_page= request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('landing'))
         else:
             flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('login.html', title='Login', form=form)
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+@app.route("/landing")
+def landing():
+    return render_template('landing.html')
+
+@app.route("/library")
+@login_required
+def library():
+    return render_template('library.html')
 
 
 @app.route('/form', methods =["GET", "POST"])
@@ -65,6 +90,10 @@ def extract_recipe_info(recipe_string):
 
     return recipe_name, ingredients, directions, nutrition_facts
 
+def ingredients_to_list(ingredients):
+    # Split the string by commas and strip whitespaces
+    ingredients_list = [ingredient.strip() for ingredient in ingredients.split('-')]
+    return ingredients_list
 
 protein, cals, ingredients, servings, cuisine = None, None, None, None, None
 @app.route('/recipe', methods =["GET", "POST"])
@@ -88,7 +117,8 @@ def getGPTResponse():
     cleaned_response = completion['choices'][0]['message']['content']
 
     name, ingredients, directions, nutrition_facts = extract_recipe_info(cleaned_response)
-    return render_template('/recipe.html', name=name, ingredients=ingredients, directions=directions, nutrition_facts=nutrition_facts)
+    ingredientsList = ingredients_to_list(ingredients)
+    return render_template('/recipe.html', name=name, ingredients=ingredientsList, directions=directions, nutrition_facts=nutrition_facts)
 
 
 
