@@ -23,6 +23,7 @@
       <div class="container">
         <div class="header-content">
           <h1>{{ name }}</h1>
+          <img src="{{ image_url }}" />
         </div>
       </div>
     </header>
@@ -32,9 +33,10 @@
           <h2>Ingredients</h2>
         </header>
         <ul id="listContainer" class="ingredient-container">
-          <script type="text/javascript">
+          <!-- <script type="text/javascript">
             window.onload = function () {
-              var ingredientsList = JSON.parse(ingredients);
+              var ingredients = JSON.parse("{{ ingredients|tojson|safe }}");
+              console.log(ingredients);
 
               var listContainer = document.getElementById("listContainer");
 
@@ -45,7 +47,11 @@
                 listContainer.appendChild(listItem);
               }
             };
-          </script>
+          </script> -->
+
+          {% for ingredient in ingredients %}
+          <li>{{ ingredient }}</li>
+          {% endfor %}
         </ul>
 
         <p></p>

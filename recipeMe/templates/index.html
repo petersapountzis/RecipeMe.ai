@@ -6,58 +6,71 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='style.css') }}"
     />
+    <script src="{{ url_for('static', filename='/js/loading.js')}}"></script>
   </head>
   <body>
-    <div class="container">
-      <h2>Generate a Recipe!</h2>
-      <form>
-        <div class="input-group">
-          <label for="cuisine">Cuisine:</label>
-          <input
-            type="text"
-            id="cuisine"
-            name="cuisine"
-            placeholder="Enter cuisine of choice"
-          />
-        </div>
-        <div class="input-group">
-          <label for="protein">Ingridients:</label>
-          <input
-            type="text"
-            id="ingridients"
-            name="ingridients"
-            placeholder="Enter preferred ingridients (separate by commas)"
-          />
-        </div>
-        <div class="input-group">
-          <label for="protein">Servings:</label>
-          <input
-            type="number"
-            id="servings"
-            name="servings"
-            placeholder="Enter number of servings"
-          />
-        </div>
-        <div class="input-group">
-          <label for="protein">Protein (g):</label>
-          <input
-            type="number"
-            id="protein"
-            name="protein"
-            placeholder="Enter protein amount"
-          />
-        </div>
-        <div class="input-group">
-          <label for="calories">Calories:</label>
-          <input
-            type="number"
-            id="calories"
-            name="calories"
-            placeholder="Enter calorie amount"
-          />
-        </div>
-        <button class="btn">Generate</button>
-      </form>
+    <div id="original-content">
+      <!-- Your content here -->
+      <div class="container">
+        <h2>Generate a Recipe!</h2>
+        <form
+          id="my-form"
+          class="my-form"
+          action="{{ url_for('getFormData') }}"
+          method="post"
+        >
+          <div class="input-group">
+            <label for="cuisine">Cuisine:</label>
+            <input
+              type="text"
+              id="cuisine"
+              name="cuisine"
+              placeholder="Enter cuisine of choice"
+            />
+          </div>
+          <div class="input-group">
+            <label for="protein">Ingridients:</label>
+            <input
+              type="text"
+              id="ingridients"
+              name="ingridients"
+              placeholder="Enter preferred ingridients (separate by commas)"
+            />
+          </div>
+          <div class="input-group">
+            <label for="protein">Servings:</label>
+            <input
+              type="number"
+              id="servings"
+              name="servings"
+              placeholder="Enter number of servings"
+            />
+          </div>
+          <div class="input-group">
+            <label for="protein">Protein (g):</label>
+            <input
+              type="number"
+              id="protein"
+              name="protein"
+              placeholder="Enter protein amount"
+            />
+          </div>
+          <div class="input-group">
+            <label for="calories">Calories:</label>
+            <input
+              type="number"
+              id="calories"
+              name="calories"
+              placeholder="Enter calorie amount"
+            />
+          </div>
+          <button class="btn">Generate</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="loading-screen" class="loading-screen">
+      <p>Loading...</p>
     </div>
   </body>
 </html>

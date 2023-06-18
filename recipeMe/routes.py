@@ -1,4 +1,4 @@
-from flask import request, render_template, session, url_for, redirect, flash, request
+from flask import request, render_template, session, url_for, redirect, flash, request, jsonify
 from recipeMe import app, db, bcrypt 
 from recipeMe.models import User, Recipe
 from recipeMe.login import RegistrationForm, LoginForm
@@ -72,7 +72,12 @@ def getFormData():
         session[ingredients] = request.form.get("ingredients")
         session[servings] = request.form.get("servings")
         session[cuisine] = request.form.get("cuisine")
-        return redirect(url_for('getGPTResponse'))
+
+        # return redirect(url_for('getGPTResponse'))
+
+        redirect_url = url_for('getGPTResponse')
+        print(redirect_url)
+        return jsonify({"redirect_url": redirect_url})   
     if request.method == 'GET':
         return render_template('index.html')
 
@@ -99,15 +104,15 @@ def ingredients_to_list(ingredients):
     ingredients_list = [ingredient.strip() for ingredient in ingredients.split('-')]
     return ingredients_list
 
-protein, cals, ingredients, servings, cuisine = None, None, None, None, None
+protein, cals, ingredients, servings, cuisine = '', '', '', '', ''
 @app.route('/recipe', methods =["GET", "POST"])
 def getGPTResponse():
     openai.api_key = API_KEY_OPENAI
-    protein = session.get('protein', 'any')
-    cals = session.get('cals', 'any')
-    ingredients = session.get('ingredients', 'any')
-    servings = session.get('servings', 'any')
-    cuisine = session.get('cuisine', 'any')
+    protein = session.get('protein', 30)
+    cals = session.get('cals', 500)
+    ingredients = session.get('ingredients', '')
+    servings = session.get('servings', 1)
+    cuisine = session.get('cuisine', '')
     prompt = f"Hello. I want {servings} servings of {cuisine} cuisine. I want around {protein} grams of protein, and around {cals} calories. I want {ingredients} ingredients included. "
 
 
@@ -122,12 +127,18 @@ def getGPTResponse():
 
     name, ingredients, directions, nutrition_facts = extract_recipe_info(cleaned_response)
     ingredientsList = ingredients_to_list(ingredients)
-    # ingredientsList = ['2 boneless, skinless chicken breasts', '1/4 cup olive oil', '3 tablespoons balsamic vinegar', '1 tablespoon honey', '1/2 teaspoon dried oregano', '1/4 teaspoon salt', '1/8 teaspoon black pepper', '4 cups mixed greens', '1/2 cup cherry tomatoes, halved', '1/4 cup red onion, thinly sliced', '1/4 cup feta cheese, crumbled']
-    ingredientsList = list(ingredientsList)
-
-    json_ingredients = json.dumps(ingredientsList)
-    return render_template('recipe.html',ingredients=json_ingredients)
-
+    image_prompt = f'{name}, food photography, morning light, 15mm'
+    image = openai.Image.create(
+        prompt=image_prompt,
+        n=1,
+        size="256x256"
+    )
+    image_url = image['data'][0]['url']
+    # image_url = 'https://oaidalleapiprodscus.blob.core.windows.net/private/org-4DfDJ6RG5WPUDAvY3ML4Q03p/user-8MIVw41uvGSUWG9K6ImbKrwh/img-PWGIVMhrW9Zg0CWwnhLi7y23.png?st=2023-06-18T15%3A30%3A02Z&se=2023-06-18T17%3A30%3A02Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-06-17T20%3A53%3A36Z&ske=2023-06-18T20%3A53%3A36Z&sks=b&skv=2021-08-06&sig=lQsmOucRxmhZmZfpPDNfAimFtAYAa0uxF12j1GbQVxI%3D'
+    json_ingredients = {
+        "ingredients": json.dumps(ingredientsList)
+    }
+    return render_template('recipe.html',ingredients=ingredientsList, name=name , directions=directions, nutrition_facts=nutrition_facts, image_url=image_url)
 
 
 

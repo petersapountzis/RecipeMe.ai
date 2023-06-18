@@ -1,27 +1,28 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
 :root {
-    --transition: all 300ms ease-in-out;
-    --dark-color: #332e29;
-    --light-color: #fff;
+  --transition: all 300ms ease-in-out;
+  --dark-color: #332e29;
+  --light-color: #fff;
 }
-  
+
 * {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-    outline: 0;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  outline: 0;
 }
 html {
-    font-size: 10px;
-    scroll-behavior: smooth;
+  font-size: 10px;
+  scroll-behavior: smooth;
 }
 body {
-    font-size: 1.6rem;
-    font-family: "Poppins", sans-serif;
-    line-height: 1.6;
+  font-size: 1.6rem;
+  font-family: "Poppins", sans-serif;
+  line-height: 1.6;
 }
-button, .btn {
+button,
+.btn {
   cursor: pointer;
   border: none;
   background: transparent;
@@ -49,16 +50,16 @@ video {
 .vh-100 {
   min-height: 40vh;
 }
-h1{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0;
-    text-align: center;
-    margin-top: 0;
-    line-height: 1.3;
-    margin-bottom: 1rem;
-    color: var(--dark-color);
+h1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  text-align: center;
+  margin-top: 0;
+  line-height: 1.3;
+  margin-bottom: 1rem;
+  color: var(--dark-color);
 }
 
 .flex {
@@ -82,10 +83,11 @@ h1{
   line-height: 1.8;
 }
 
-#header{
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../images/home.jpeg') center/cover no-repeat fixed;
-    justify-content: space-between;
-    align-items: center;
+#header {
+  /* background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url("..recipeMe/static/images/home.jpeg") center/cover no-repeat fixed; */
+  justify-content: space-between;
+  align-items: center;
 }
 #header .container {
   width: 100%;
@@ -99,28 +101,26 @@ h1{
   color: var(--light-color);
 }
 
-.title{
-    text-align: left;
-    margin-left: 20px;
-    margin-bottom: 2px;
-    padding: 10px;
-    border-bottom: 4px solid #333;
-    width: 20%; /* Adjust the width as needed */
+.title {
+  text-align: left;
+  margin-left: 20px;
+  margin-bottom: 2px;
+  padding: 10px;
+  border-bottom: 4px solid #333;
+  width: 20%; /* Adjust the width as needed */
 }
 
-
 .ingredient-container {
-    display: grid;
-    margin: 20px;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    grid-gap: 20px;
-    list-style-type: none;
-    padding: 0;
+  display: grid;
+  margin: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 20px;
+  list-style-type: none;
+  padding: 0;
 }
 
 .item {
-    padding: 5px;
-    background-color: #f2f2f2;
-    border-radius: 5px;
+  padding: 5px;
+  background-color: #f2f2f2;
+  border-radius: 5px;
 }
-
