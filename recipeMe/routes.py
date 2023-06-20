@@ -19,7 +19,7 @@ def home():
 @app.route("/register", methods =["GET", "POST"])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('landing'))
+        return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
@@ -36,17 +36,18 @@ def login():
     token = request.form.get('csrf_token')
     
     if current_user.is_authenticated:
-        return redirect(url_for('landing'))
+        return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page= request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('landing'))
+            return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
             flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('login.html', title='Login', form=form)
+
 
 @app.route("/logout")
 def logout():
@@ -57,10 +58,13 @@ def logout():
 def landing():
     return render_template('landing.html')
 
+
+
 @app.route("/library")
 # @login_required
 def library():
-    return render_template('library.html')
+    recipes = Recipe.query.all()
+    return render_template('library.html', recipes=recipes)
 
 
 @app.route('/form', methods =["GET", "POST"])
@@ -102,16 +106,10 @@ def extract_recipe_info(recipe_string):
 def ingredients_to_list(ingredients):
     # Split the string by commas and strip whitespaces
     ingredients_list = [ingredient.strip() for ingredient in ingredients.split('-')]
-    print(ingredients_list)
     ingredients_list = ingredients_list[1:]
     return ingredients_list
 
 def parse_instructions(instructions):
-    # instructions = re.split(r'(\d+\.\s)', instructions_string)
-    # # instructions = list(filter(None, instructions)) # removes empty strings
-    # # pairs = [(instructions[i], instructions[i+1].strip()) for i in range(0, len(instructions), 2)]
-    # print(instructions)
-    # return instructions
     if instructions is None:
         return []
     # Split by digit-period-space pattern, keep the digit and period with the instruction
@@ -127,9 +125,8 @@ def getGPTResponse():
     ingredients = session.get('ingredients', '')
     servings = session.get('servings', 1)
     cuisine = session.get('cuisine', '')
+
     prompt = f"Hello. I want {servings} servings of {cuisine} cuisine. I want around {protein} grams of protein, and around {cals} calories. I want {ingredients} ingredients included. "
-
-
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
@@ -138,22 +135,53 @@ def getGPTResponse():
         ]
     )
     cleaned_response = completion['choices'][0]['message']['content']
-
     name, ingredients, directions, nutrition_facts = extract_recipe_info(cleaned_response)
-    ingredientsList = ingredients_to_list(ingredients)
-    instructionsList = parse_instructions(directions)
-    image_prompt = f'{name}, food photography, morning light, 15mm'
+
+    image_prompt = f'{name}, food photography, morning light, as high resolution as possible and realistic appetizing food.'
     image = openai.Image.create(
         prompt=image_prompt,
         n=1,
         size="256x256"
     )
     image_url = image['data'][0]['url']
-    # image_url = 'https://oaidalleapiprodscus.blob.core.windows.net/private/org-4DfDJ6RG5WPUDAvY3ML4Q03p/user-8MIVw41uvGSUWG9K6ImbKrwh/img-PWGIVMhrW9Zg0CWwnhLi7y23.png?st=2023-06-18T15%3A30%3A02Z&se=2023-06-18T17%3A30%3A02Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-06-17T20%3A53%3A36Z&ske=2023-06-18T20%3A53%3A36Z&sks=b&skv=2021-08-06&sig=lQsmOucRxmhZmZfpPDNfAimFtAYAa0uxF12j1GbQVxI%3D'
+    
+
+    ingredientsList = ingredients_to_list(ingredients)
+    instructionsList = parse_instructions(directions)
+    
     json_ingredients = {
         "ingredients": json.dumps(ingredientsList)
     }
+
     return render_template('recipe.html',ingredients=ingredientsList, name=name , directions=instructionsList, nutrition_facts=nutrition_facts, image_url=image_url)
+
+
+@app.route('/add_to_library', methods=['POST'])
+@login_required  # Ensure that a user is logged in before they can add a recipe to the library
+def add_to_library():
+    # Get the recipe details from the session data
+    recipe_data = session.get('recipe')
+    if recipe_data is None:
+        flash('No recipe to add to the library. Please generate a recipe first.', 'warning')
+        return redirect(url_for('register'))
+
+    # Create a new Recipe and save it to the database
+    recipe = Recipe(
+        name=recipe_data['name'], 
+        ingredients=recipe_data['ingredients'], 
+        directions=recipe_data['directions'], 
+        nutrition_facts=recipe_data['nutrition_facts'], 
+        user_id=current_user.id
+    )
+    print(recipe_data)
+    db.session.add(recipe)
+    db.session.commit()
+
+    # You might want to remove the recipe from the session data now
+    session.pop('recipe')
+
+    # Redirect the user back to the library or wherever you want
+    return redirect(url_for('library'))
 
 
 
