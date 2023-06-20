@@ -31,23 +31,25 @@
     <div class="container">
       {% for recipe in recipes|reverse %}
       <div class="recipe">
-        <h2>{{ recipe.name }}</h2>
-        <img src="{{ recipe.image_url }}" alt="{{ recipe.name }}" />
+        <details>
+          <summary><h2>{{ recipe.name }}</h2></summary>
+          <img src="{{ recipe.image_url }}" alt="{{ recipe.name }}" />
 
-        <h3>Ingredients:</h3>
-        <p>{{ recipe.ingredients }}</p>
+          <h3>Ingredients:</h3>
+          <p>{{ recipe.ingredients }}</p>
 
-        <h3>Directions:</h3>
-        <p>{{ recipe.directions }}</p>
+          <h3>Directions:</h3>
+          <p>{{ recipe.directions }}</p>
 
-        <h3>Nutrition Facts:</h3>
-        <p>{{ recipe.nutrition_facts }}</p>
-        <form
-          action="{{ url_for('delete_recipe', recipe_id=recipe.id) }}"
-          method="POST"
-        >
-          <button type="submit">Delete</button>
-        </form>
+          <h3>Nutrition Facts:</h3>
+          <p>{{ recipe.nutrition_facts }}</p>
+          <form
+            action="{{ url_for('delete_recipe', recipe_id=recipe.id) }}"
+            method="POST"
+          >
+            <button type="submit">Delete</button>
+          </form>
+        </details>
       </div>
       {% endfor %}
     </div>
