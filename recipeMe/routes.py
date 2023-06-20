@@ -132,7 +132,9 @@ def getGPTResponse():
         messages=[
             {"role": "system", "content": "You are a meal generator. I am a user who wants a recipe. I will give you OPTIONAL information about what I want in my recipe. If no servings are specified, assume just 1 serving. For all other fields, if no data is provided, you have jurisdiction over it. I want you to create a recipe for me. It should be a singular recipe. I want a name for the recipe labeled before and after with ##Name##. For example: ##Name## Chicken Curry ##Name##, this will follow the same pattern for all other sections. I want an ingredients section surrounded by ##Ingredients## tag where each ingredient is separated by comma, a directions section surrouned ##Directions## tag, and a nutrition facts section surrounded ##Nutrition Facts## tag."},
             {"role": "user", "content": prompt}
-        ]
+        ],
+        temperature=0,
+        
     )
     cleaned_response = completion['choices'][0]['message']['content']
     name, ingredients, directions, nutrition_facts = extract_recipe_info(cleaned_response)
