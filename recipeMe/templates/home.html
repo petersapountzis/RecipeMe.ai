@@ -15,10 +15,11 @@
 </head>
 <body>
     <header class="header">
-        <div class="logo">RecipeMe.ai</div>
+        <a class="logo" href="{{ url_for('home')}}">RecipeMe.ai</a>
         <nav class="nav-links">
           <a href="{{ url_for('login')}}">Login</a>
           <a href="{{ url_for('register')}}">Sign Up</a>
+          <a href="{{ url_for('library')}}">Library</a>
         </nav>
       </header>
     <!-- header -->
@@ -28,7 +29,7 @@
                 <h1 style="font-size: 90px;">Welcome to RecipeMe.ai<br>
                     <span style="font-size: 70px;" class = "typewrite" data-loop = "yes" data-speed = "100" data-delay = "2000" data-words = '["Macro Friendly", "Diverse Cuisines", "Recipes Made Easy"]'></span></br>
                 </h1>
-                <h3>the only macro-tailored AI powered recipe generator</h3>
+                <h3>the only macro-tailored AI recipe generator</h3>
             </div>
         </div>
     </header>

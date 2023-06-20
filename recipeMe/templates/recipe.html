@@ -30,7 +30,7 @@
   </head>
   <body>
     <header class="header">
-      <div class="logo">RecipeMe.ai</div>
+      <a class="logo" href="{{ url_for('home')}}">RecipeMe.ai</a>
       <nav class="nav-links">
         <a href="{{ url_for('login')}}">Login</a>
         <a href="{{ url_for('register')}}">Sign Up</a>
@@ -42,6 +42,24 @@
         <div class="header-content">
           <h1>{{ name }}</h1>
         </div>
+        <!-- <a href="{{ url_for('getFormData') }}" target="_blank"> -->
+        <form action="/add_to_library" method="post">
+          <button
+            style="
+              border-radius: 20px;
+              width: 150px;
+              height: 50px;
+              border: none;
+              background-color: #c8b6a6;
+              color: white;
+              font-size: 16px;
+              font-family: 'Poppins', sans-serif;
+            "
+            type="submit"
+          >
+            Add to Library
+          </button>
+        </form>
       </div>
     </header>
     <main>

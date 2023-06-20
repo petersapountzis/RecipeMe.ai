@@ -12,10 +12,11 @@
   </head>
   <body>
     <header class="header">
-      <div class="logo">RecipeMe.ai</div>
+      <a class="logo" href="{{ url_for('home')}}">RecipeMe.ai</a>
       <nav class="nav-links">
         <a href="{{ url_for('login')}}">Login</a>
         <a href="{{ url_for('register')}}">Sign Up</a>
+        <a href="{{ url_for('library')}}">Library</a>
       </nav>
     </header>
     LANDING

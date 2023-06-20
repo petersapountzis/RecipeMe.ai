@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Recipe Library</title>
+    <style>
+      .recipe {
+        margin-bottom: 30px;
+      }
+
+      .recipe h2 {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .recipe h4 {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .recipe ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+
+      .recipe ol {
+        margin: 0;
+        padding-left: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Recipe Library</h1>
+    {% for recipe in recipes %}
+    <div class="recipe">
+      <h2>{{ recipe.name }}</h2>
+      <h4>Ingredients:</h4>
+      <ul>
+        {% for ingredient in recipe.ingredients|safe %}
+        <li>{{ ingredient }}</li>
+        {% endfor %}
+      </ul>
+      <h4>Directions:</h4>
+      <ol>
+        {% for direction in recipe.directions|safe %}
+        <li>{{ direction }}</li>
+        {% endfor %}
+      </ol>
+      <h4>Nutrition Facts:</h4>
+      <p>{{ recipe.nutrition_facts }}</p>
+    </div>
+    {% endfor %}
+  </body>
+</html>
