@@ -106,7 +106,6 @@ def extract_recipe_info(recipe_string):
 def ingredients_to_list(ingredients):
     # Split the string by commas and strip whitespaces
     ingredients_list = [ingredient.strip() for ingredient in ingredients.split('-')]
-    print(ingredients_list)
     ingredients_list = ingredients_list[1:]
     return ingredients_list
 
@@ -164,7 +163,7 @@ def add_to_library():
     recipe_data = session.get('recipe')
     if recipe_data is None:
         flash('No recipe to add to the library. Please generate a recipe first.', 'warning')
-        return redirect(url_for('home'))
+        return redirect(url_for('register'))
 
     # Create a new Recipe and save it to the database
     recipe = Recipe(
@@ -174,6 +173,7 @@ def add_to_library():
         nutrition_facts=recipe_data['nutrition_facts'], 
         user_id=current_user.id
     )
+    print(recipe_data)
     db.session.add(recipe)
     db.session.commit()
 
