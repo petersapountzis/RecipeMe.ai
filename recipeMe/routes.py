@@ -133,8 +133,8 @@ def getGPTResponse():
             {"role": "system", "content": "You are a meal generator. I am a user who wants a recipe. I will give you OPTIONAL information about what I want in my recipe. If no servings are specified, assume just 1 serving. For all other fields, if no data is provided, you have jurisdiction over it. I want you to create a recipe for me. It should be a singular recipe. I want a name for the recipe labeled before and after with ##Name##. For example: ##Name## Chicken Curry ##Name##, this will follow the same pattern for all other sections. I want an ingredients section surrounded by ##Ingredients## tag where each ingredient is separated by comma, a directions section surrouned ##Directions## tag, and a nutrition facts section surrounded ##Nutrition Facts## tag."},
             {"role": "user", "content": prompt}
         ],
-        temperature=0,
-        
+        temperature=0.3
+
     )
     cleaned_response = completion['choices'][0]['message']['content']
     name, ingredients, directions, nutrition_facts = extract_recipe_info(cleaned_response)
@@ -155,6 +155,15 @@ def getGPTResponse():
         "ingredients": json.dumps(ingredientsList)
     }
 
+    recipe_data = {
+            'name': name,
+            'ingredients': ingredientsList,
+            'directions': instructionsList,
+            'nutrition_facts': nutrition_facts,
+            'image_url': image_url
+        }
+
+    session['recipe'] = recipe_data
     return render_template('recipe.html',ingredients=ingredientsList, name=name , directions=instructionsList, nutrition_facts=nutrition_facts, image_url=image_url)
 
 
@@ -162,16 +171,18 @@ def getGPTResponse():
 @login_required  # Ensure that a user is logged in before they can add a recipe to the library
 def add_to_library():
     # Get the recipe details from the session data
+    print('add to library clicked')
     recipe_data = session.get('recipe')
     if recipe_data is None:
         flash('No recipe to add to the library. Please generate a recipe first.', 'warning')
+        print('recipe data DNE')
         return redirect(url_for('register'))
-
+        
     # Create a new Recipe and save it to the database
     recipe = Recipe(
         name=recipe_data['name'], 
-        ingredients=recipe_data['ingredients'], 
-        directions=recipe_data['directions'], 
+        ingredients=json.dumps(recipe_data['ingredients']),  # Convert list to string
+        directions=json.dumps(recipe_data['directions']),  # Convert list to string
         nutrition_facts=recipe_data['nutrition_facts'], 
         user_id=current_user.id
     )
@@ -179,7 +190,7 @@ def add_to_library():
     db.session.add(recipe)
     db.session.commit()
 
-    # You might want to remove the recipe from the session data now
+    # remove the recipe from the session data now
     session.pop('recipe')
 
     # Redirect the user back to the library or wherever you want
@@ -187,4 +198,21 @@ def add_to_library():
 
 
 
+@app.route("/delete_recipe/<int:recipe_id>", methods=['POST'])
+@login_required
+def delete_recipe(recipe_id):
+    # Fetch the recipe by id
+    recipeToRemove = Recipe.query.get_or_404(recipe_id)
+
+    # Ensure that the current user is the owner of the recipe
+    if recipeToRemove.user_id != current_user.id:
+        flash('You do not have permission to delete this recipe.', 'error')
+        return redirect(url_for('library'))
+
+    # If the current user is the owner of the recipe, delete the recipe
+    db.session.delete(recipeToRemove)
+    db.session.commit()
+    
+    flash('Recipe deleted.', 'success')
+    return redirect(url_for('library'))
 

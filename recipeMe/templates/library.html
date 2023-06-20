@@ -1,34 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Recipe Library</title>
-    <style>
-      .recipe {
-        margin-bottom: 30px;
-      }
-
-      .recipe h2 {
-        font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 10px;
-      }
-
-      .recipe h4 {
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 5px;
-      }
-
-      .recipe ul {
-        margin: 0;
-        padding-left: 20px;
-      }
-
-      .recipe ol {
-        margin: 0;
-        padding-left: 20px;
-      }
-    </style>
+    <meta charset="UTF-8" />
+    <title>My Recipe Library</title>
+    <!-- Add your CSS link here -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='library.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='header.css') }}"
+    />
   </head>
   <body>
     <header class="header">
@@ -44,25 +27,29 @@
         {% endif %}
       </nav>
     </header>
-    <h1>Recipe Library</h1>
-    {% for recipe in recipes %}
-    <div class="recipe">
-      <h2>{{ recipe.name }}</h2>
-      <h4>Ingredients:</h4>
-      <ul>
-        {% for ingredient in recipe.ingredients|safe %}
-        <li>{{ ingredient }}</li>
-        {% endfor %}
-      </ul>
-      <h4>Directions:</h4>
-      <ol>
-        {% for direction in recipe.directions|safe %}
-        <li>{{ direction }}</li>
-        {% endfor %}
-      </ol>
-      <h4>Nutrition Facts:</h4>
-      <p>{{ recipe.nutrition_facts }}</p>
+    <h1>My Recipe Library</h1>
+    <div class="container">
+      {% for recipe in recipes|reverse %}
+      <div class="recipe">
+        <h2>{{ recipe.name }}</h2>
+        <img src="{{ recipe.image_url }}" alt="{{ recipe.name }}" />
+
+        <h3>Ingredients:</h3>
+        <p>{{ recipe.ingredients }}</p>
+
+        <h3>Directions:</h3>
+        <p>{{ recipe.directions }}</p>
+
+        <h3>Nutrition Facts:</h3>
+        <p>{{ recipe.nutrition_facts }}</p>
+        <form
+          action="{{ url_for('delete_recipe', recipe_id=recipe.id) }}"
+          method="POST"
+        >
+          <button type="submit">Delete</button>
+        </form>
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
   </body>
 </html>
