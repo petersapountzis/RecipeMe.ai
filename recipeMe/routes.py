@@ -1,5 +1,5 @@
 from flask import request, render_template, session, url_for, redirect, flash, request, jsonify
-from recipeMe import app, db, bcrypt 
+from recipeMe import app, db, bcrypt
 from recipeMe.models import User, Recipe
 from recipeMe.login import RegistrationForm, LoginForm
 import openai
@@ -63,7 +63,7 @@ def landing():
 @app.route("/library")
 # @login_required
 def library():
-    recipes = Recipe.query.all()
+    recipes = Recipe.query.filter_by(user_id=current_user.id).all()
     return render_template('library.html', recipes=recipes)
 
 
@@ -184,8 +184,9 @@ def add_to_library():
         ingredients=json.dumps(recipe_data['ingredients']),  # Convert list to string
         directions=json.dumps(recipe_data['directions']),  # Convert list to string
         nutrition_facts=recipe_data['nutrition_facts'], 
-        user_id=current_user.id
-    )
+        user_id=current_user.id,
+        image_url=recipe_data['image_url'])
+    
     print(recipe_data)
     db.session.add(recipe)
     db.session.commit()
