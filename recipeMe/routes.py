@@ -64,8 +64,13 @@ def landing():
 @app.route("/library")
 # @login_required
 def library():
-    recipes = Recipe.query.filter_by(user_id=current_user.id).all()
-    return render_template('library.html', recipes=recipes)
+    recipes = Recipe.query.filter_by(user_id=current_user.id).all()  # get all recipes by the current user
+    for recipe in recipes:
+        # Convert the ingredients and directions string back to list
+        recipe.ingredients = json.loads(recipe.ingredients)
+        recipe.directions = json.loads(recipe.directions)
+    return render_template('library.html', recipes=recipes)  # render the library page with the recipes
+
 
 
 @app.route('/form', methods =["GET", "POST"])
