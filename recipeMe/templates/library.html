@@ -33,22 +33,24 @@
       <div class="recipe">
         <details>
           <summary><h2>{{ recipe.name }}</h2></summary>
-          <img src="{{ recipe.image_url }}" alt="{{ recipe.name }}" />
+          <div class="recipe-details">
+            <img src="{{ recipe.image_url }}" alt="{{ recipe.name }}" />
 
-          <h3>Ingredients:</h3>
-          <p>{{ recipe.ingredients }}</p>
+            <h3>Ingredients:</h3>
+            <p>{{ recipe.ingredients }}</p>
 
-          <h3>Directions:</h3>
-          <p>{{ recipe.directions }}</p>
+            <h3>Directions:</h3>
+            <p>{{ recipe.directions }}</p>
 
-          <h3>Nutrition Facts:</h3>
-          <p>{{ recipe.nutrition_facts }}</p>
-          <form
-            action="{{ url_for('delete_recipe', recipe_id=recipe.id) }}"
-            method="POST"
-          >
-            <button type="submit">Delete</button>
-          </form>
+            <h3>Nutrition Facts:</h3>
+            <p>{{ recipe.nutrition_facts }}</p>
+            <form
+              action="{{ url_for('delete_recipe', recipe_id=recipe.id) }}"
+              method="POST"
+            >
+              <button type="submit">Delete</button>
+            </form>
+          </div>
         </details>
       </div>
       {% endfor %}

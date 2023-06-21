@@ -315,6 +315,10 @@ h3 {
   border-radius: 50%;
 }
 
+.credits{
+  margin-top: 20px;
+  font-size: small;
+}
 /* Media Queries */
 
 @media (min-width: 450px) {
