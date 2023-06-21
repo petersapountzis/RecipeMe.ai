@@ -72,7 +72,7 @@ body {
   
 .blank-box {
     width: 300px;
-    height: 484px;
+    height: 476px;
     background-color: #ccc;
     display: flex;
     justify-content: center;
@@ -88,24 +88,21 @@ body {
   font-size: 25px;
 }
 
-.remember {
-    font-weight: bold;
+.remember{
+    font-weight: 200;
     display: flex;
     justify-content: space-between;
-  }
-
-a, a:visited {
-    color: #000000; /* Replace with the desired color value */
-    text-decoration: none;
 }
 
-a{
-    margin-top: 16px;
+a, a:visited {
+    color: #000000; 
+    text-decoration: none;
+    margin: 0px;
 }
 
 .register-link {
-    margin-top: 16px;
-    margin-left: 10px;
+    font-size: 13px;
+    margin-bottom: 0px;
     color: rgb(0, 0, 0);
     cursor: pointer;
     align-items: right;
@@ -115,4 +112,10 @@ a{
 .register-link:hover {
     text-decoration: underline;
     
+}
+
+.account{
+    font-size: 13px;
+    padding-bottom: 0px;
+    margin-bottom: 30px;
 }

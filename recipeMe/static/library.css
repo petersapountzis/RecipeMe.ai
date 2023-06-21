@@ -1,5 +1,5 @@
 body {
-  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
     url("../static/images/library.jpeg") center/cover no-repeat fixed;
   margin: 0;
   font-family: Arial, sans-serif;
@@ -45,4 +45,10 @@ h1{
 .recipe p {
   margin: 10px 0;
   white-space: pre-line; /* Keeps line breaks */
+}
+
+ol{
+  margin-left: 0;
+  padding-left: 20px;
+  list-style-type: none;
 }

@@ -53,9 +53,18 @@
                             <h2>About RecipeMe.Ai</h2>
                         </div>
                         <p class = "lead"> RecipeMe.ai is the first macro-tailored ai powered recipe generator. We give the user the priveledge to specifiy their prefered cuisine, amount of protein, calories, servings, as well as any ingredients that may want to use</p>
-                        <a href="{{ url_for('getFormData') }}" target="_blank">
-                            <button style="border-radius: 20px; width: 150px; height: 50px; border: none; background-color: #C8B6A6; color: white; font-size: 16px; font-family: 'Poppins', sans-serif;">Get Started</button>
-                        </a>
+                        {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('getFormData') }}">
+                                <button style="border-radius: 20px; width: 150px; height: 50px; border: none; background-color: #C8B6A6; color: white; font-size: 16px; font-family: 'Poppins', sans-serif;">Generate</button>
+                            </a>
+                        {% else %}
+                            <a href="{{ url_for('register') }}">
+                                <button style="border-radius: 20px; width: 150px; height: 50px; border: none; background-color: #C8B6A6; color: white; font-size: 16px; font-family: 'Poppins', sans-serif;">Get Started</button>
+                            </a>
+                            <a href="{{ url_for('login') }}">
+                                <button style="margin-left: 10px; border-radius: 20px; width: 150px; height: 50px; border: none; background-color: #C8B6A6; color: white; font-size: 16px; font-family: 'Poppins', sans-serif;">Login</button>
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

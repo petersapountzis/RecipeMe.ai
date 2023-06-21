@@ -44,11 +44,17 @@
           </div>
           <div class="form-group">
             <div class="remember">
-              <p>{{ form.remember.label }} {{ form.remember }}</p>
-              <a href="{{ url_for('register') }}">
-                <span class="register-link">Register</span>
-              </a>
+              {{ form.remember.label }} {{ form.remember }}
             </div>
+          </div>
+          <div class="remember">
+            <a class = "account">Don't have an account?</a>
+            <a href="{{ url_for('register') }}" class = "register-link">
+              <span >Register</span>
+            </a>
+            <!-- <a class="account" href="{{ url_for('register') }}">
+              <span >Register</span>
+            </a> -->
           </div>
           <div class="form-group">
             <div class="submit-btn">{{ form.submit() }}</div>
