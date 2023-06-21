@@ -37,10 +37,18 @@
             <img src="{{ recipe.image_url }}" alt="{{ recipe.name }}" />
 
             <h3>Ingredients:</h3>
-            <p>{{ recipe.ingredients }}</p>
+            <ul>
+              {% for ingredient in recipe.ingredients%}
+              <li>{{ ingredient }}</li>
+              {% endfor %}
+            </ul>
 
             <h3>Directions:</h3>
-            <p>{{ recipe.directions }}</p>
+            <ol>
+              {% for direction in recipe.directions %}
+              <li>{{ direction }}</li>
+              {% endfor %}
+            </ol>
 
             <h3>Nutrition Facts:</h3>
             <p>{{ recipe.nutrition_facts }}</p>
