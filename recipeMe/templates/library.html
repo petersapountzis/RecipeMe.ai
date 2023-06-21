@@ -58,6 +58,12 @@
             >
               <button type="submit">Delete</button>
             </form>
+            <form
+              action="{{ url_for('export_recipe', recipe_id=recipe.id) }}"
+              method="get"
+            >
+              <button type="submit">Export Recipe</button>
+            </form>
           </div>
         </details>
       </div>

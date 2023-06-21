@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Recipe Export</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      .recipe {
+        margin: 0 auto;
+        width: 80%;
+      }
+      .recipe h1 {
+        text-align: center;
+        margin-bottom: 50px;
+      }
+      .recipe img {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+      }
+      .recipe-section {
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="recipe">
+      <h1>{{ recipe.name }}</h1>
+      <div class="recipe-section">
+        <h2>Ingredients</h2>
+        <!-- <ul>
+          {% for ingredient in recipe.ingredients %}
+          <li>{{ ingredient }}</li>
+          {% endfor %}
+        </ul> -->
+        <p>{{ recipe.ingredients }}</p>
+      </div>
+      <div class="recipe-section">
+        <h2>Directions</h2>
+        <p>{{ recipe.directions }}</p>
+      </div>
+      <div class="recipe-section">
+        <h2>Nutrition Facts</h2>
+        <p>{{ recipe.nutrition_facts }}</p>
+      </div>
+    </div>
+  </body>
+</html>
