@@ -46,6 +46,7 @@ def login():
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
             flash('Login Unsuccessful. Please check username and password', 'danger')
+            print('login unsuccessful')
     return render_template('login.html', title='Login', form=form)
 
 
@@ -130,7 +131,7 @@ def getGPTResponse():
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "You are a meal generator. I am a user who wants a recipe. I will give you OPTIONAL information about what I want in my recipe. If no servings are specified, assume just 1 serving. For all other fields, if no data is provided, you have jurisdiction over it. I want you to create a recipe for me. It should be a singular recipe. I want a name for the recipe labeled before and after with ##Name##. For example: ##Name## Chicken Curry ##Name##, this will follow the same pattern for all other sections. I want an ingredients section surrounded by ##Ingredients## tag where each ingredient is separated by comma, a directions section surrouned ##Directions## tag, and a nutrition facts section surrounded ##Nutrition Facts## tag."},
+            {"role": "system", "content": "You are a meal generator. I am a user who wants a recipe. I will give you OPTIONAL information about what I want in my recipe. If no servings are specified, assume just 1 serving. For all other fields, if no data is provided, you have jurisdiction over it. I want you to create a recipe for me. It should be a singular recipe. I want a name for the recipe that is as appetizing and professional as possible, labeled before and after with ##Name##. For example: ##Name## Chicken Curry ##Name##, this will follow the same pattern for all other sections. I want an ingredients section surrounded by ##Ingredients## tag where each ingredient is separated by comma, a directions section surrouned ##Directions## tag, and a nutrition facts section surrounded ##Nutrition Facts## tag."},
             {"role": "user", "content": prompt}
         ],
         temperature=0.3
@@ -139,7 +140,8 @@ def getGPTResponse():
     cleaned_response = completion['choices'][0]['message']['content']
     name, ingredients, directions, nutrition_facts = extract_recipe_info(cleaned_response)
 
-    image_prompt = f'{name}, food photography, morning light, as high resolution as possible and realistic appetizing food.'
+    image_prompt = f'{name}, gourmet food photography, morning light, with a focus on showcasing a highly appetizing and realistic meal served on an aesthetic and beautifully designed plate. Aim for high resolution and great detail.'
+
     image = openai.Image.create(
         prompt=image_prompt,
         n=1,
@@ -217,3 +219,6 @@ def delete_recipe(recipe_id):
     flash('Recipe deleted.', 'success')
     return redirect(url_for('library'))
 
+@app.shell_context_processor
+def make_shell_context():
+    return {'db': db, 'User': User, 'Recipe': Recipe}
