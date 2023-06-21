@@ -10,17 +10,26 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='header.css') }}"
     /> -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='header.css') }}"
+    />
   </head>
   <body>
     <div id="original-content">
-      <!-- <header class="header">
-        <div class="logo">RecipeMe.ai</div>
+      <header class="header">
+        <a class="logo" href="{{ url_for('home')}}">RecipeMe.ai</a>
         <nav class="nav-links">
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('logout')}}">Logout</a>
+            <a href="{{ url_for('library')}}">Library</a>
+            <a href="{{ url_for('getFormData')}}">Generate</a>
+            {% else %}
           <a href="{{ url_for('login')}}">Login</a>
           <a href="{{ url_for('register')}}">Sign Up</a>
+            {% endif %}
         </nav>
-      </header> -->
-      <!-- Your content here -->
+      </header>
       <div class="container">
         <h2>Generate a Recipe!</h2>
         <form
