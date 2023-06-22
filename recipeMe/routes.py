@@ -11,36 +11,43 @@ import pdfkit
 import os
 
 
-
+# home page route
 @app.route("/home")
 @app.route("/")
 def home():
     return render_template('/home.html')
 
+# recipe page route 
 @app.route("/register", methods =["GET", "POST"])
 def register():
     if current_user.is_authenticated:
+        # if logged in send them to home page
         return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
+        # encrypt password
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user = User(username = form.username.data, email = form.email.data, password = hashed_password)
+        # add user to database
         db.session.add(user)
         db.session.commit()
         flash('Your account has been created! You are now able to login.', 'success')
+        # once registered, make them login
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
 
+# login page route
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    # fetch cross site request forgery token
     token = request.form.get('csrf_token')
-    
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
+        # ensure user exists and password is correct
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page= request.args.get('next')
@@ -56,14 +63,8 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route("/landing")
-def landing():
-    return render_template('landing.html')
-
-
-
 @app.route("/library")
-# @login_required
+@login_required
 def library():
     recipes = Recipe.query.filter_by(user_id=current_user.id).all()  # get all recipes by the current user
     for recipe in recipes:
@@ -77,8 +78,7 @@ def library():
 @app.route('/form', methods =["GET", "POST"])
 def getFormData():
     if request.method == 'POST':
-        # Form has been submitted, store the data
-        print(request.form)  # This line is new; it prints the form data
+        # Form has been submitted, store the data in session variables
         session['protein'] = request.form.get("protein")
         session['cals'] = request.form.get("calories")
         session['ingredients'] = request.form.get("ingredients")
@@ -86,12 +86,13 @@ def getFormData():
         session['cuisine'] = request.form.get("cuisine")
 
         redirect_url = url_for('getGPTResponse')
-        print('redirect')
+        # Redirect to the GPT response page using loading.js, need it in json format
         return jsonify({"redirect_url": redirect_url})
         
     if request.method == 'GET':
         return render_template('index.html')
 
+# Helper function to extract the recipe name, ingredients, directions, and nutrition facts from the GPT response
 def extract_recipe_info(recipe_string):
     name_pattern = r"##Name##(.*?)##Name##"
     ingredients_pattern = r"##Ingredients##(.*?)##Directions##"
@@ -110,12 +111,14 @@ def extract_recipe_info(recipe_string):
 
     return recipe_name, ingredients, directions, nutrition_facts
 
+# Helper function to convert the ingredients string to a list
 def ingredients_to_list(ingredients):
     # Split the string by commas and strip whitespaces
     ingredients_list = [ingredient.strip() for ingredient in ingredients.split('-')]
     ingredients_list = ingredients_list[1:]
     return ingredients_list
 
+# Helper function to parse the directions string into a list of instructions
 def parse_instructions(instructions):
     if instructions is None:
         return []
@@ -124,38 +127,44 @@ def parse_instructions(instructions):
 
 
 protein, cals, ingredients, servings, cuisine = '', '', '', '', ''
+
+# recipe page route
 @app.route('/recipe', methods =["GET", "POST"])
 def getGPTResponse():
     openai.api_key = API_KEY_OPENAI
-    protein = session.get('protein', 30)
-    cals = session.get('cals', 500)
-    ingredients = session.get('ingredients', '')
-    servings = session.get('servings', 1)
-    cuisine = session.get('cuisine', '')
 
-    prompt = f"Hello. I want {servings} servings of {cuisine} cuisine. I want around {protein} grams of protein, and around {cals} calories. I want {ingredients} ingredients included. "
+    # Get the form data from the session variables, add optional fields if not provided
+    protein = session.get('protein', 'any')
+    cals = session.get('cals', 'any')
+    ingredients = session.get('ingredients', 'any')
+    servings = session.get('servings', 1)
+    cuisine = session.get('cuisine', 'any')
+
+    # Prompt for the GPT-3.5 API
+    prompt = f"Hello. I want {servings} servings of {cuisine} cuisine. I want around {protein} grams of protein, and around {cals} calories. I want {ingredients} ingredients included. If I include any ingredients make sure they are incorportaed in the dish. "
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are a meal generator. I am a user who wants a recipe. I will give you OPTIONAL information about what I want in my recipe. If no servings are specified, assume just 1 serving. For all other fields, if no data is provided, you have jurisdiction over it. I want you to create a recipe for me. It should be a singular recipe. I want a name for the recipe that is as appetizing and professional as possible, labeled before and after with ##Name##. For example: ##Name## Chicken Curry ##Name##, this will follow the same pattern for all other sections. I want an ingredients section surrounded by ##Ingredients## tag where each ingredient is separated by comma, a directions section surrouned ##Directions## tag, and a nutrition facts section surrounded ##Nutrition Facts## tag."},
             {"role": "user", "content": prompt}
         ],
-        temperature=0.3
-
+        temperature=0.9
     )
+    # parse json response for content
     cleaned_response = completion['choices'][0]['message']['content']
     name, ingredients, directions, nutrition_facts = extract_recipe_info(cleaned_response)
 
-    image_prompt = f'{name}, gourmet food photography, morning light, with a focus on showcasing a highly appetizing and realistic meal served on an aesthetic and beautifully designed plate. Aim for high resolution and great detail.'
+    # DALLE prompt
+    image_prompt = f'Generate a high-resolution image of a freshly prepared dish. The dish is a {name}. It is plated on a white, ceramic dish, placed on a rustic wooden table. The lighting should highlight the textures and colors of the dish, making it look appetizing and ready to eat.  In the background, slightly out of focus, there should be a bottle of red wine and a lit candle to create a warm, cozy atmosphere.'
 
     image = openai.Image.create(
         prompt=image_prompt,
         n=1,
-        size="256x256"
+        size="1024x1024"
     )
     image_url = image['data'][0]['url']
     
-
+    # Convert the ingredients and directions string to a list
     ingredientsList = ingredients_to_list(ingredients)
     instructionsList = parse_instructions(directions)
     
@@ -195,6 +204,7 @@ def add_to_library():
         user_id=current_user.id,
         image_url=recipe_data['image_url'])
     
+    # add recipe to DB if clicked
     db.session.add(recipe)
     db.session.commit()
 
@@ -227,8 +237,14 @@ def delete_recipe(recipe_id):
 
 @app.route('/export_recipe/<int:recipe_id>', methods=['POST', 'GET'])
 def export_recipe(recipe_id):
+    # Fetch the recipe by id
     recipe = Recipe.query.get_or_404(recipe_id)
-    html = render_template('recipe_export.html', recipe=recipe)
+    # Convert the ingredients and directions string back to list
+    export_ing = json.loads(recipe.ingredients)
+    export_dir = json.loads(recipe.directions)
+    # nutrition = json.loads(recipe.nutrition_facts)
+    # print(nutrition)
+    html = render_template('recipe_export.html', ingredients=export_ing, name=recipe.name, directions=export_dir, nutrition_facts=recipe.nutrition_facts, image_url=recipe.image_url)
 
     # Create a PDF from the HTML
     pdf = pdfkit.from_string(html, False)

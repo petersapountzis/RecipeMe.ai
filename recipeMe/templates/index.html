@@ -20,18 +20,19 @@
       <header class="header">
         <a class="logo" href="{{ url_for('home')}}">RecipeMe.ai</a>
         <nav class="nav-links">
-            {% if current_user.is_authenticated %}
-            <a href="{{ url_for('logout')}}">Logout</a>
-            <a href="{{ url_for('library')}}">Library</a>
-            <a href="{{ url_for('getFormData')}}">Generate</a>
-            {% else %}
+          {% if current_user.is_authenticated %}
+          <a href="{{ url_for('logout')}}">Logout</a>
+          <a href="{{ url_for('library')}}">Library</a>
+          <a href="{{ url_for('getFormData')}}">Generate</a>
+          {% else %}
           <a href="{{ url_for('login')}}">Login</a>
           <a href="{{ url_for('register')}}">Sign Up</a>
-            {% endif %}
+          {% endif %}
         </nav>
       </header>
       <div class="container">
         <h2>Generate a Recipe!</h2>
+        <h4>All fields are optional.</h4>
         <form
           id="my-form"
           class="my-form"
@@ -48,16 +49,16 @@
             />
           </div>
           <div class="input-group">
-            <label for="protein">Ingridients:</label>
+            <label for="protein">Ingredients:</label>
             <input
               type="text"
               id="ingridients"
               name="ingridients"
-              placeholder="Enter preferred ingridients (separate by commas)"
+              placeholder="Enter preferred ingridients (separate by commas) "
             />
           </div>
           <div class="input-group">
-            <label for="protein">Servings:</label>
+            <label for="protein">Servings: (defaults to 1)</label>
             <input
               type="number"
               id="servings"
@@ -71,7 +72,7 @@
               type="number"
               id="protein"
               name="protein"
-              placeholder="Enter protein amount"
+              placeholder="Enter protein goal"
             />
           </div>
           <div class="input-group">
@@ -80,7 +81,7 @@
               type="number"
               id="calories"
               name="calories"
-              placeholder="Enter calorie amount"
+              placeholder="Enter calorie goal"
             />
           </div>
           <button class="btn">Generate</button>
