@@ -54,18 +54,20 @@
 
             <h3>Nutrition Facts:</h3>
             <p>{{ recipe.nutrition_facts }}</p>
-            <form
+            <div class="del-and-exp">
+              <form
               action="{{ url_for('delete_recipe', recipe_id=recipe.id) }}"
               method="POST"
-            >
-              <button type="submit">Delete</button>
-            </form>
-            <form
+              >
+                <button style="border-radius: 20px; width: 150px; height: 50px; border: none; background-color: #C8B6A6; color: white; font-size: 16px; font-family: 'Poppins', sans-serif; margin: 10px;" type="submit">Delete</button>
+              </form>
+              <form
               action="{{ url_for('export_recipe', recipe_id=recipe.id) }}"
               method="get"
-            >
-              <button type="submit">Export Recipe</button>
-            </form>
+              >
+                <button style="border-radius: 20px; width: 150px; height: 50px; border: none; background-color: #C8B6A6; color: white; font-size: 16px; font-family: 'Poppins', sans-serif; margin: 10px;" type="submit">Export Recipe</button>
+              </form>
+            </div>
           </div>
         </details>
       </div>

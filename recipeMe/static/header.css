@@ -40,3 +40,9 @@ body {
   text-decoration: none;
   color: white;
 }
+
+@media(min-width: 250px){
+  .header{
+    padding: 15px;
+  }
+}
