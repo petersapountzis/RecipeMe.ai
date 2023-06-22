@@ -5,10 +5,11 @@
     <style>
       body {
         font-family: Arial, sans-serif;
+        padding: 30px;
       }
       .recipe {
-        margin: 0 auto;
-        width: 80%;
+        width: 100%;
+        box-sizing: border-box;
       }
       .recipe h1 {
         text-align: center;
@@ -22,27 +23,49 @@
       .recipe-section {
         margin-bottom: 20px;
       }
+      .recipe-section h2 {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+      }
+      .recipe-section ul {
+        padding-left: 20px;
+      }
+      .recipe-section ul li {
+        margin-bottom: 5px;
+      }
+      .recipe-section-d ul li {
+        padding-left: none;
+        margin-bottom: 5px;
+        margin-left: 0px;
+        list-style-type: none;
+      }
     </style>
   </head>
   <body>
     <div class="recipe">
-      <h1>{{ recipe.name }}</h1>
+      <h1>{{ name }}</h1>
+      <!-- {% if image_url %}
+      <img src="{{ image_url }}" />
+      {% endif %} -->
       <div class="recipe-section">
         <h2>Ingredients</h2>
-        <!-- <ul>
-          {% for ingredient in recipe.ingredients %}
+        <ul>
+          {% for ingredient in ingredients %}
           <li>{{ ingredient }}</li>
           {% endfor %}
-        </ul> -->
-        <p>{{ recipe.ingredients }}</p>
+        </ul>
       </div>
-      <div class="recipe-section">
+      <div class="recipe-section-d">
         <h2>Directions</h2>
-        <p>{{ recipe.directions }}</p>
+        <ul>
+          {% for direction in directions %}
+          <li>{{ direction }}</li>
+          {% endfor %}
+        </ul>
       </div>
       <div class="recipe-section">
         <h2>Nutrition Facts</h2>
-        <p>{{ recipe.nutrition_facts }}</p>
+        <p>{{ nutrition_facts }}</p>
       </div>
     </div>
   </body>
