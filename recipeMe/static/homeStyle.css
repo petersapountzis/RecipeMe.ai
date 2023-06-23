@@ -291,6 +291,9 @@ h3 {
 }
 
 @media(min-width: 768px){
+  .vh-100 {
+    min-height: 90vh;
+  }
   .header-content h1{
       font-size: 7rem;
   }
