@@ -43,7 +43,11 @@
       </nav>
     </header>
     <!-- header -->
-    <header id="header" class="vh-100 flex">
+    <header
+      id="header"
+      class="vh-100 flex"
+      style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ image_url }}') center/cover no-repeat fixed;"
+    >
       <div class="container">
         <div class="header-content">
           <h1>{{ name }}</h1>
@@ -69,7 +73,7 @@
       </div>
     </header>
     <main>
-      <img src="{{ image_url }}" />
+      <!-- <img src="{{ image_url }}" /> -->
       <section id="ingredients" class="vh-101">
         <header class="title">
           <h2>Ingredients</h2>

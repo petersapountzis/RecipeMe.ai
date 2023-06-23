@@ -87,11 +87,11 @@ h1 {
   line-height: 1.8;
 }
 
-#header {
+/* #header {
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("images/food2.jpeg") center/cover no-repeat fixed;
   justify-content: space-between;
   align-items: center;
-}
+} */
 
 /* #header .recipe-image {
   justify-content: space-between;
@@ -118,7 +118,7 @@ h1 {
   border-bottom: 4px solid #333;
   width: 20%; /* Adjust the width as needed */
 }
-.ingredient{
+.ingredient {
   background-color: #ccc;
   height: 200px;
 }
