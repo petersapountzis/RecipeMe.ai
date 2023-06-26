@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import openai
-from recipeMe.config import API_KEY_OPENAI  
+  
 import re
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
