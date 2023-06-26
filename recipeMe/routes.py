@@ -3,7 +3,7 @@ from recipeMe import app, db, bcrypt
 from recipeMe.models import User, Recipe
 from recipeMe.login import RegistrationForm, LoginForm
 import openai
-from recipeMe.config import API_KEY_OPENAI
+# from recipeMe.config import API_KEY_OPENAI
 import re
 from flask_login import login_user, current_user, logout_user, login_required
 import json
@@ -131,7 +131,7 @@ protein, cals, ingredients, servings, cuisine = '', '', '', '', ''
 # recipe page route
 @app.route('/recipe', methods =["GET", "POST"])
 def getGPTResponse():
-    openai.api_key = API_KEY_OPENAI
+    openai.api_key = os.environ.get('API_KEY_OPENAI')
 
     # Get the form data from the session variables, add optional fields if not provided
     protein = session.get('protein', 'any')
