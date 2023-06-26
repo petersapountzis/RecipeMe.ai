@@ -1,1 +1,1 @@
-web: gunicorn recipeMe.recipeMe:app
+web: gunicorn run:app
