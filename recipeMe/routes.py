@@ -3,13 +3,14 @@ from recipeMe import app, db, bcrypt
 from recipeMe.models import User, Recipe
 from recipeMe.login import RegistrationForm, LoginForm
 import openai
-# from recipeMe.config import API_KEY_OPENAI
 import re
 from flask_login import login_user, current_user, logout_user, login_required
 import json
 import pdfkit
 import os
 
+path_wkhtmltopdf = os.environ.get('WKHTMLTOPDF_BINARY', '/usr/local/bin/wkhtmltopdf')
+config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
 
 # home page route
 @app.route("/home")
@@ -255,7 +256,7 @@ def export_recipe(recipe_id):
     html = render_template('recipe_export.html', ingredients=export_ing, name=recipe.name, directions=export_dir, nutrition_facts=recipe.nutrition_facts, image_url=recipe.image_url)
 
     # Create a PDF from the HTML
-    pdf = pdfkit.from_string(html, False)
+    pdf = pdfkit.from_string(html, False, configuration=config)
 
     # Create response with the PDF data
     response = make_response(pdf)
@@ -263,3 +264,8 @@ def export_recipe(recipe_id):
     response.headers['Content-Disposition'] = f'inline; filename={recipe.name}.pdf'
     return response
 
+
+@app.route('/regenerate', methods=['POST'])
+def regenerate():
+    # Re-generate a new recipe using GPT
+    return redirect(url_for('getGPTResponse'))
