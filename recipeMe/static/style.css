@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
 body {
-  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+  background: linear-gradient(rgba(0, 0, 0, 0.701), rgba(0, 0, 0, 0.701)),
     url("../static/images/food2.jpeg") center/cover no-repeat fixed;
   justify-content: flex-start;
   align-items: flex-end;
@@ -10,14 +10,18 @@ body {
   color: white;
 }
 
+.wrapper{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
 .container {
-  max-width: 400px;
-  margin: 0 auto;
+  width: 40rem;
   margin-top: 40px;
   padding: 20px;
   border-radius: 5px;
   /* background-color: rgba(200, 182, 166, 0.5); */
-  background-color: rgba(255, 255, 255, 0.3);
 }
 
 .input-group {
