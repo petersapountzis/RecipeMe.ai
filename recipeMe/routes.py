@@ -9,8 +9,8 @@ import json
 import pdfkit
 import os
 
-path_wkhtmltopdf = os.environ.get('WKHTMLTOPDF_BINARY', '/usr/local/bin/wkhtmltopdf')
-config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
+# path_wkhtmltopdf = os.environ.get('WKHTMLTOPDF_BINARY', '/usr/local/bin/wkhtmltopdf')
+# config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
 
 # home page route
 @app.route("/home")
@@ -256,7 +256,7 @@ def export_recipe(recipe_id):
     html = render_template('recipe_export.html', ingredients=export_ing, name=recipe.name, directions=export_dir, nutrition_facts=recipe.nutrition_facts, image_url=recipe.image_url)
 
     # Create a PDF from the HTML
-    pdf = pdfkit.from_string(html, False, configuration=config)
+    pdf = pdfkit.from_string(html, False)
 
     # Create response with the PDF data
     response = make_response(pdf)
