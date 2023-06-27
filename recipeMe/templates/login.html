@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>{{ title }}</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
     <link
       rel="stylesheet"
       type="text/css"
@@ -13,6 +14,15 @@
     />
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+      .header {
+        margin-bottom: 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        background-color: #fefefe;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+      }
     </style>
   </head>
   <body>
@@ -29,42 +39,41 @@
         {% endif %}
       </nav>
     </header>
-    <div class="login-container">
-      <div class="login-form">
-        <h2>Login</h2>
-        <form method="POST">
-          {{ form.hidden_tag() }}
-          <div class="form-group">
-            {{ form.email.label }}<br />
-            {{ form.email }}
-          </div>
-          <div class="form-group">
-            {{ form.password.label }}<br />
-            {{ form.password }}
-          </div>
-          <div class="form-group">
-            <div class="remember">
-              {{ form.remember.label }} {{ form.remember }}
+    <div class="wrapper">
+      <div class="login-container">
+        <div class="login-form">
+          <h2>Login</h2>
+          <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+              {{ form.email.label }}<br />
+              {{ form.email }}
             </div>
-          </div>
-          <div class="remember">
-            <a class = "account">Don't have an account?</a>
-            <a href="{{ url_for('register') }}" class = "register-link">
-              <span >Register</span>
-            </a>
-            <!-- <a class="account" href="{{ url_for('register') }}">
-              <span >Register</span>
-            </a> -->
-          </div>
-          <div class="form-group">
-            <div class="submit-btn">{{ form.submit() }}</div>
-          </div>
-        </form>
-      </div>
-      <div class="blank-box">
-        <p class="message">
-          Login to save your generated meals to your library!
-        </p>
+            <div class="form-group">
+              {{ form.password.label }}<br />
+              {{ form.password }}
+            </div>
+            <div class="form-group">
+              <div class="remember">
+                {{ form.remember.label }} {{ form.remember }}
+              </div>
+            </div>
+            <div class="remember">
+              <a class = "account">Don't have an account?</a>
+              <a href="{{ url_for('register') }}" class = "register-link">
+                <span >Register</span>
+              </a>
+            </div>
+            <div class="form-group">
+              <div class="submit-btn">{{ form.submit() }}</div>
+            </div>
+          </form>
+        </div>
+        <div class="blank-box">
+          <p class="message">
+            Login to save your generated meals to your library!
+          </p>
+        </div>
       </div>
     </div>
   </body>
