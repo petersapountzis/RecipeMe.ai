@@ -36,13 +36,41 @@ body {
   background-color: #C8B6A6;
   font-family: "Poppins", sans-serif;
   font-weight: 300;
-  margin-left: 20px;
+  margin-left: 10px;
   text-decoration: none;
   color: white;
 }
 
-@media(min-width: 250px){
-  .header{
-    padding: 15px;
+/* HEADER MOBILE RESIZING  */
+
+@media (max-width: 600px) {
+  .header {
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 10px;
+  }
+
+  .header .logo {
+    font-size: 18px;
+    width: 50%;
+    order: 1;
+    margin-bottom: 0px;
+  }
+
+  .nav-links {
+    width: 50%;
+    order: 2;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 0px;
+  }
+
+  .nav-links a {
+    margin-left: 0px;
+    font-size: 13px;
+    padding: 5px 5px;
   }
 }
+
+/* HEADER MOBILE RESIZING END */
