@@ -77,6 +77,11 @@ def library():
 
 @app.route('/form', methods =["GET", "POST"])
 def getFormData():
+    session_keys = ['protein', 'cals', 'ingredients', 'servings', 'cuisine', 'recipe']
+    for key in session_keys:
+        if key in session:
+            session.pop(key)
+
     if request.method == 'POST':
         # Form has been submitted, store the data in session variables
         session['protein'] = request.form.get("protein")
@@ -111,12 +116,16 @@ def extract_recipe_info(recipe_string):
 
     return recipe_name, ingredients, directions, nutrition_facts
 
+
 # Helper function to convert the ingredients string to a list
 def ingredients_to_list(ingredients):
+    if ingredients is None:
+        return []
     # Split the string by commas and strip whitespaces
     ingredients_list = [ingredient.strip() for ingredient in ingredients.split('-')]
     ingredients_list = ingredients_list[1:]
     return ingredients_list
+
 
 # Helper function to parse the directions string into a list of instructions
 def parse_instructions(instructions):
@@ -132,14 +141,13 @@ protein, cals, ingredients, servings, cuisine = '', '', '', '', ''
 @app.route('/recipe', methods =["GET", "POST"])
 def getGPTResponse():
     openai.api_key = os.environ.get('API_KEY_OPENAI')
-
+    print(session)
     # Get the form data from the session variables, add optional fields if not provided
     protein = session.get('protein', 'any')
     cals = session.get('cals', 'any')
     ingredients = session.get('ingredients', 'any')
     servings = session.get('servings', 1)
     cuisine = session.get('cuisine', 'any')
-
     # Prompt for the GPT-3.5 API
     prompt = f"Hello. I want {servings} servings of {cuisine} cuisine. I want around {protein} grams of protein, and around {cals} calories. I want {ingredients} ingredients included. If I include any ingredients make sure they are incorportaed in the dish. "
     completion = openai.ChatCompletion.create(
@@ -152,7 +160,7 @@ def getGPTResponse():
     )
     # parse json response for content
     cleaned_response = completion['choices'][0]['message']['content']
-    name, ingredients, directions, nutrition_facts = extract_recipe_info(cleaned_response)
+    name, GPTingredients, directions, nutrition_facts = extract_recipe_info(cleaned_response)
 
     # DALLE prompt
     image_prompt = f'Generate a high-resolution image of a freshly prepared dish. The dish is a {name}. It is plated on a white, ceramic dish, placed on a rustic wooden table. The lighting should highlight the textures and colors of the dish, making it look appetizing and ready to eat.  In the background, slightly out of focus, there should be a bottle of red wine and a lit candle to create a warm, cozy atmosphere.'
@@ -165,7 +173,7 @@ def getGPTResponse():
     image_url = image['data'][0]['url']
     
     # Convert the ingredients and directions string to a list
-    ingredientsList = ingredients_to_list(ingredients)
+    ingredientsList = ingredients_to_list(GPTingredients)
     instructionsList = parse_instructions(directions)
     
     json_ingredients = {
