@@ -246,6 +246,9 @@ def delete_recipe(recipe_id):
 
 @app.route('/export_recipe/<int:recipe_id>', methods=['POST', 'GET'])
 def export_recipe(recipe_id):
+    path_wkhtmltopdf = os.getenv('WKHTMLTOPDF_PATH', '/usr/local/bin/wkhtmltopdf')
+    config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
+
     # Fetch the recipe by id
     recipe = Recipe.query.get_or_404(recipe_id)
     # Convert the ingredients and directions string back to list
@@ -256,7 +259,7 @@ def export_recipe(recipe_id):
     html = render_template('recipe_export.html', ingredients=export_ing, name=recipe.name, directions=export_dir, nutrition_facts=recipe.nutrition_facts, image_url=recipe.image_url)
 
     # Create a PDF from the HTML
-    pdf = pdfkit.from_string(html, False)
+    pdf = pdfkit.from_string(html, False, configuration=config)
 
     # Create response with the PDF data
     response = make_response(pdf)
