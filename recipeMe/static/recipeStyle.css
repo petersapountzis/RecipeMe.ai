@@ -49,9 +49,11 @@ video {
   width: 100%;
   display: block;
 }
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
+.vh-100 .container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
   padding: 0rem;
 }
 .vh-100 {
@@ -141,19 +143,13 @@ ul {
 
 .recipe-buttons{
   display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 50%;
-  margin: auto;
+  justify-content: space-evenly;
+  align-items: flex-end;
+  margin-top: auto;
+  width: 100%;
 }
 
 @media screen and (max-width: 756px){
-  button{
-    width: 150px;
-    height: 50px;
-    font-size: 16px;
-  }
-
   .header-content h1 {
     font-size: 6vb;
   }
