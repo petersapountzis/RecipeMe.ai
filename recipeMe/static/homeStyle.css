@@ -263,6 +263,11 @@ h3 {
 }
 
 @media(min-width: 250px){
+  #header {
+    background-image: url('images/food-mobile.jpeg');
+    background-position: center;
+    background-size: cover;
+  }
   .vh-100 {
     min-height: 60vh;
   }
@@ -291,9 +296,11 @@ h3 {
 }
 
 @media(min-width: 600px){
-  /* #header {
-    background-size: contain;
-  } */
+   #header {
+    background-image: url('images/food-mobile.jpeg');
+    background-position: center;
+    background-size: cover;
+  }
   .vh-100 {
     min-height: 90vh;
   }
@@ -312,3 +319,4 @@ h3 {
       margin-bottom: 0;
   }
 }
+
