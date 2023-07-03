@@ -57,11 +57,11 @@
                         <p class = "lead"> RecipeMe.ai is the first macro-tailored AI recipe generator. We give the user the privilege to specifiy their prefered cuisine, amount of protein, calories, servings, as well as any ingredients that may want to use.</p>
                         {% if current_user.is_authenticated %}
                             <a href="{{ url_for('getFormData') }}">
-                                <button style="border-radius: 20px; width: 150px; height: 50px; border: none; background-color: #C8B6A6; color: white; font-size: 16px; font-family: 'Poppins', sans-serif;">Generate</button>
+                                <button style="border-radius: 20px; width: 175px; height: 50px; border: none; background-color: #C8B6A6; color: white; font-size: 16px; font-family: 'Poppins', sans-serif;">Create a Recipe</button>
                             </a>
                         {% else %}
-                            <a href="{{ url_for('register') }}">
-                                <button style="border-radius: 20px; width: 150px; height: 50px; border: none; background-color: #C8B6A6; color: white; font-size: 16px; font-family: 'Poppins', sans-serif;">Get Started</button>
+                            <a href="{{ url_for('getFormData') }}">
+                                <button style="border-radius: 20px; width: 175px; height: 50px; border: none; background-color: #C8B6A6; color: white; font-size: 16px; font-family: 'Poppins', sans-serif;">Create a Recipe</button>
                             </a>
                             <a href="{{ url_for('login') }}">
                                 <button style="margin-left: 10px; border-radius: 20px; width: 150px; height: 50px; border: none; background-color: #C8B6A6; color: white; font-size: 16px; font-family: 'Poppins', sans-serif;">Login</button>
@@ -71,32 +71,44 @@
                 </div>
             </div>
         </section>
-        <!-- end of about section -->
-
-        <!-- portfolio section -->
-        <!-- <section id = "portfolio" class = "vh-100 py-7">
+        <section id = "contact" class = "py-7">
             <div class = "container">
-                <div class = "portfolio-content">
-                    <div class = "title">
-                        <h2>Some of our generated meals</h2>
-                        <a href = "#contact" class = "btn-down">
-                            <i class = "fas fa-chevron-down"></i>
-                        </a>
-                    </div>
-
-                    <div class = "portfolio-grid grid">
-                        <div><img src = "{{ url_for('static', filename='images/salmon.jpeg') }}" ></div>
-                        <div><img src = "{{ url_for('static', filename='images/indian.jpeg') }}"></div>
-                        <div><img src = "{{ url_for('static', filename='images/wrap.jpeg') }}"></div>
-                        <div><img src = "{{ url_for('static', filename='images/salad.jpeg') }}"></div>
-                        <div><img src = "{{ url_for('static', filename='images/taco.jpeg') }}"></div>
-                        <div><img src = "{{ url_for('static', filename='images/nachos.jpeg') }}"></div>
-                        <div><img src = "{{ url_for('static', filename='images/acai.jpeg') }}"></div>
+                <div class = "contact-content flex">
+                    <div class = "contact-left">
+                        <div class="title">
+                            <h2>HELP US IMPROVE</h2>
+                        </div>
+                        <p>Noticle an issue? Have any suggestions? If you have any feedback for us, please fill out this form! Thank you for using RecipeMe.ai</p>
+                        <form action="https://formsubmit.co/khalilov.davud@gmail.com" method="POST">
+                            <input type="hidden" name="_captcha" value="false">
+                            <label for="name">Name:</label>
+                            <input type="text" class = "form-control" id="name" name="name" required>
+                            <label for="email">Email:</label>
+                            <input type="email" class = "form-control" id="email" name="email" required>
+                            <label for="message">Message:</label>
+                            <textarea id="message" class = "form-control" name="message" required></textarea>
+                            <input type="submit" class = "btn-submit btn" value = "submit">
+                            <input type="hidden" name="_next" value="http://recipeme-ai.com">
+                        </form>
+                        <div id="thank-you" style="display: none;">
+                            <h2 style="margin-top: 20px;">Thank you for your submission!</h3>
+                            <!-- Add any additional content or instructions here -->
+                        </div>
+                         <script>
+                            // Add an event listener to the form submission
+                            document.querySelector('form').addEventListener('submit', function(event) {
+                    
+                                // Hide the form
+                                document.querySelector('form').style.display = 'none';
+                    
+                                // Show the thank you message
+                                document.getElementById('thank-you').style.display = 'block';
+                            });
+                        </script>
                     </div>
                 </div>
             </div>
-        </section> -->
-        <!-- end of portfolio section -->
+        </section>
     </main>
     <!-- footer -->
     <footer id = "footer" class = "py-7">
