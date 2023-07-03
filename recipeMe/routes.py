@@ -78,7 +78,7 @@ def library():
 
 @app.route('/form', methods =["GET", "POST"])
 def getFormData():
-    session_keys = ['protein', 'cals', 'ingredients', 'servings', 'cuisine', 'recipe']
+    session_keys = ['protein', 'cals', 'ingredients', 'servings', 'cuisine', 'dish', 'recipe']
     for key in session_keys:
         if key in session:
             session.pop(key)
@@ -90,6 +90,7 @@ def getFormData():
         session['ingredients'] = request.form.get("ingredients")
         session['servings'] = request.form.get("servings")
         session['cuisine'] = request.form.get("cuisine")
+        session['dish'] = request.form.get("dish")
 
         redirect_url = url_for('getGPTResponse')
         # Redirect to the GPT response page using loading.js, need it in json format
@@ -136,7 +137,7 @@ def parse_instructions(instructions):
     return re.split('\s(?=\d+\.)', instructions)
 
 
-protein, cals, ingredients, servings, cuisine = '', '', '', '', ''
+protein, cals, ingredients, servings, cuisine, dish = '', '', '', '', '', ''
 
 # recipe page route
 @app.route('/recipe', methods =["GET", "POST"])
@@ -145,12 +146,13 @@ def getGPTResponse():
     print(session)
     # Get the form data from the session variables, add optional fields if not provided
     protein = session.get('protein', 'any')
-    cals = session.get('cals', 'any')
+    cals = session.get('calories', 'any')
+    dish = session.get('dish', 'any')
     ingredients = session.get('ingredients', 'any')
     servings = session.get('servings', 1)
     cuisine = session.get('cuisine', 'any')
     # Prompt for the GPT-3.5 API
-    prompt = f"Hello. I want {servings} servings of {cuisine} cuisine. I want around {protein} grams of protein, and around {cals} calories. I want {ingredients} ingredients included. If I include any ingredients make sure they are incorportaed in the dish. "
+    prompt = f"Hello. I want {servings} servings of {cuisine} {dish}. I want around {protein} grams of protein, and around {cals} calories. I want {ingredients} ingredients included. If I include any ingredients make sure they are incorportaed in the dish. "
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
