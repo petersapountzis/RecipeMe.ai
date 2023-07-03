@@ -104,6 +104,7 @@ h1 {
 }
 .header-content h1 {
   font-size: 9vb;
+  margin-top: 20px;
   margin-bottom: 0;
   color: var(--light-color);
 }
@@ -146,6 +147,7 @@ ul {
   justify-content: space-evenly;
   align-items: flex-end;
   margin-top: auto;
+  margin-bottom: 10px;
   width: 100%;
 }
 
