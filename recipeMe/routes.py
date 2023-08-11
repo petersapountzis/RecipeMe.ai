@@ -78,7 +78,7 @@ def library():
 
 @app.route('/form', methods =["GET", "POST"])
 def getFormData():
-    session_keys = ['protein', 'cals', 'ingredients', 'servings', 'cuisine', 'dish', 'recipe']
+    session_keys = ['protein', 'cals', 'ingredients', 'servings', 'cuisine', 'dish', 'recipe', 'allergies']
     for key in session_keys:
         if key in session:
             session.pop(key)
@@ -91,6 +91,7 @@ def getFormData():
         session['servings'] = request.form.get("servings")
         session['cuisine'] = request.form.get("cuisine")
         session['dish'] = request.form.get("dish")
+        session['allergies'] = request.form.get("allergies")
 
         redirect_url = url_for('getGPTResponse')
         # Redirect to the GPT response page using loading.js, need it in json format
@@ -151,8 +152,9 @@ def getGPTResponse():
     ingredients = session.get('ingredients', 'any')
     servings = session.get('servings', 1)
     cuisine = session.get('cuisine', 'any')
+    allergies = session.get('allergies', 'any')
     # Prompt for the GPT-3.5 API
-    prompt = f"Hello. I want {servings} servings of {cuisine} {dish}. I want around {protein} grams of protein, and around {cals} calories. I want {ingredients} ingredients included. If I include any ingredients make sure they are incorportaed in the dish. "
+    prompt = f"Hello. I want {servings} servings of {cuisine} {dish}. I want around {protein} grams of protein, and around {cals} calories. I want {ingredients} ingredients included. If I include any ingredients make sure they are incorportaed in the dish. If I include allergies, make sure to not include {allergies} in the ingredients."
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
