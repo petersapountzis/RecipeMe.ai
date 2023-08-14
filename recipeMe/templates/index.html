@@ -15,6 +15,7 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='header.css') }}"
     />
+    <link rel="icon" href=" {{ url_for('static', filename='images/recipeme-logo2.png') }} " type="image/x-icon" />
   </head>
   <body>
     <div id="original-content">
@@ -32,6 +33,23 @@
         </nav>
       </header>
       <div class="wrapper">
+        <div id="popup" class="popup hidden">
+          <p id="popupMessage">Recipe could not be regenerated.</p>
+        </div>
+        <script>
+          // Function to show the pop-up
+          function showPopup() {
+            const popup = document.getElementById('popup');
+            const popupMessage = document.getElementById('popupMessage');
+            popupMessage.textContent = 'Recipe could not be regenerated.';
+            popup.classList.remove('hidden');
+            setTimeout(() => {
+                popup.classList.add('hidden');
+            }, 5000);
+          }
+          // Call the function to show the pop-up after the redirect
+          showPopup();
+        </script> 
         <div class="container">
           <h2>Generate a Recipe!</h2>
           <h4>All fields are optional.</h4>
