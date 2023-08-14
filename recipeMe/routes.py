@@ -192,7 +192,10 @@ def getGPTResponse():
             'nutrition_facts': nutrition_facts,
             'image_url': image_url
         }
-
+    if recipe_data is None or recipe_data['name'] is None or recipe_data['ingredients'] is None or recipe_data['directions'] is None or recipe_data['nutrition_facts'] is None:
+        flash('No recipe to add to the library. Please generate a recipe first.', 'warning')
+        print('recipe data DNE')
+        return redirect(url_for('getFormData'))    
     session['recipe'] = recipe_data
     return render_template('recipe.html',ingredients=ingredientsList, name=name , directions=instructionsList, nutrition_facts=nutrition_facts, image_url=image_url)
 
