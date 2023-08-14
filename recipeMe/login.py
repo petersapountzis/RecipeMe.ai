@@ -19,7 +19,8 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('That username is taken. Please choose a different one.')
         
     def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
+        user = User.query.filter_by(email=email.data.lower()).first()
+
         if user:
             raise ValidationError('That username is taken. Please choose a different one.')
         
