@@ -2,7 +2,7 @@
 
 body {
   background: linear-gradient(rgba(0, 0, 0, 0.701), rgba(0, 0, 0, 0.701)),
-    url("../static/images/food2.jpeg") center/cover no-repeat fixed;
+    url("images/food2.jpeg") center/cover no-repeat fixed;
   justify-content: flex-start;
   align-items: flex-end;
   padding: 60px;
@@ -112,4 +112,30 @@ body {
   color: black;
   text-align: center;
   padding-top: 20%; /* Center the text */
+}
+/* pop up */
+.popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.popup.active {
+  display: block;
+  animation: fadeOut 5s;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
