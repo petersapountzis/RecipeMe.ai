@@ -28,7 +28,7 @@ def register():
     if form.validate_on_submit():
         # encrypt password
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username = form.username.data, email = form.email.data, password = hashed_password)
+        user = User(username = form.username.data, email = form.email.data.lower(), password = hashed_password)
         # add user to database
         db.session.add(user)
         db.session.commit()
@@ -47,7 +47,7 @@ def login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+        user = User.query.filter_by(email=form.email.data.lower()).first()
         # ensure user exists and password is correct
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
@@ -192,7 +192,10 @@ def getGPTResponse():
             'nutrition_facts': nutrition_facts,
             'image_url': image_url
         }
-
+    if recipe_data is None or recipe_data['name'] is None or recipe_data['ingredients'] is None or recipe_data['directions'] is None or recipe_data['nutrition_facts'] is None:
+        flash('No recipe to add to the library. Please generate a recipe first.', 'warning')
+        print('recipe data DNE')
+        return redirect(url_for('getFormData'))    
     session['recipe'] = recipe_data
     return render_template('recipe.html',ingredients=ingredientsList, name=name , directions=instructionsList, nutrition_facts=nutrition_facts, image_url=image_url)
 
