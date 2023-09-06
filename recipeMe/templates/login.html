@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
+     <!-- Google tag (gtag.js) -->
+     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5VH6B40RYQ"></script>
+     <script>
+         window.dataLayer = window.dataLayer || [];
+         function gtag(){dataLayer.push(arguments);}
+         gtag('js', new Date());
+ 
+         gtag('config', 'G-5VH6B40RYQ');
+     </script>
     <title>{{ title }}</title>
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <link
@@ -12,10 +21,11 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='header.css') }}"
     />
+    <link rel="icon" href=" {{ url_for('static', filename='images/recipeme-logo2.png') }} " type="image/x-icon" />
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
       .header {
-        margin-bottom: 50px;
+        margin-bottom: 20px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -46,11 +56,13 @@
           <form method="POST">
             {{ form.hidden_tag() }}
             <div class="form-group">
-              {{ form.email.label }}<br />
+              {{ form.email.label }}
+              
               {{ form.email }}
             </div>
             <div class="form-group">
-              {{ form.password.label }}<br />
+              {{ form.password.label }}
+
               {{ form.password }}
             </div>
             <div class="form-group">
@@ -59,9 +71,9 @@
               </div>
             </div>
             <div class="remember">
-              <a class = "account">Don't have an account?</a>
+              <a class = "account" style="font-size: 18px;">Don't have an account?</a>
               <a href="{{ url_for('register') }}" class = "register-link">
-                <span >Register</span>
+                <span style="font-weight: 600; font-size: 18px;">Register</span>
               </a>
             </div>
             <div class="form-group">

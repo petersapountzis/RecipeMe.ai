@@ -194,13 +194,60 @@ h3 {
   width: 200px;
   margin: 0 auto 1.7rem auto;
 }
-/* portfolio */
-.portfolio-grid > div {
+/* CONTACT SECTION */
+#contact{
+  background-color: rgb(248, 248, 248);
+}
+.contact-content{
+  flex-direction: column;
+  align-items: stretch;
+}
+.contact-left{
+  margin-bottom: 5rem;
+}
+.contact-left .lead{
+  padding: 0.5rem;
+}
+.contact-left form{
+  margin-top: 3rem;
+}
+.contact-left form .form-control{
+  display: block;
+  margin: 1.6rem 0;
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  padding: 1rem;
+  width: 100%;
+}
+.contact-left form .form-control1{
+  display: block;
+  margin: 1.6rem 0;
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  padding: 1rem;
+  width: 100%;
+}
+.contact-left form .form-control::placeholder{
+  font-size: 15px;
+  font-family: 'Poppins', sans-serif;
+}
+.contact-left form .form-control1::placeholder{
+  font-size: 15px;
+  font-family: 'Poppins', sans-serif;
+}
+.contact-left .btn-submit{
+  padding: 1.4rem 3rem;
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--dark-color);
+  color: var(--light-color);
+  margin-top: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 1.6rem;
   transition: var(--transition);
 }
-.portfolio-grid > div:hover {
-  transform: scale(0.9);
+.contact-left .btn-submit:hover{
+  background-color: #000;
 }
+
 /* footer */
 #footer {
   background-color: var(--dark-color);
@@ -245,38 +292,6 @@ h3 {
 }
 /* Media Queries */
 
-/* HEADER MOBILE RESIZING  */
-/* @media (max-width: 600px) {
-  .header {
-    flex-wrap: wrap;
-    align-items: center;
-    padding: 10px;
-  }
-
-  .logo {
-    width: 50%;
-    order: 1;
-    margin-bottom: 0px;
-  }
-
-  .nav-links {
-    width: 20%;
-    order: 2;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-bottom: 0px;
-  }
-
-  .nav-links a {
-    margin-left: 0px;
-    font-size: 13px;
-    padding: 5px 5px;
-  }
-} */
-
-/* HEADER MOBILE RESIZING END */
-
 @media(min-width: 450px){
   .work-bottom{
       grid-template-columns: repeat(2, 1fr);
@@ -295,6 +310,11 @@ h3 {
 }
 
 @media(min-width: 250px){
+  #header {
+    background-image: url('images/food-mobile.jpeg');
+    background-position: center;
+    background-size: cover;
+  }
   .vh-100 {
     min-height: 60vh;
   }
@@ -322,7 +342,12 @@ h3 {
   }
 }
 
-@media(min-width: 768px){
+@media(min-width: 600px){
+   #header {
+    background-image: url('images/food-mobile.jpeg');
+    background-position: center;
+    background-size: cover;
+  }
   .vh-100 {
     min-height: 90vh;
   }
@@ -341,3 +366,4 @@ h3 {
       margin-bottom: 0;
   }
 }
+

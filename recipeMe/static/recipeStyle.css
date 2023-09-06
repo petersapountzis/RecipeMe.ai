@@ -23,9 +23,16 @@ body {
 }
 button,
 .btn {
-  cursor: pointer;
+  margin: 5px;
+  border-radius: 20px;
+  width: 150px;
+  height: 50px;
   border: none;
-  background: transparent;
+  background-color: #c8b6a6;
+  color: white;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
 }
 ul {
   list-style-type: none;
@@ -42,9 +49,11 @@ video {
   width: 100%;
   display: block;
 }
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
+.vh-100 .container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
   padding: 0rem;
 }
 .vh-100 {
@@ -87,17 +96,6 @@ h1 {
   line-height: 1.8;
 }
 
-/* #header {
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("images/food2.jpeg") center/cover no-repeat fixed;
-  justify-content: space-between;
-  align-items: center;
-} */
-
-/* #header .recipe-image {
-  justify-content: space-between;
-  align-items: center;
-} */
-
 #header .container {
   width: 100%;
 }
@@ -106,6 +104,7 @@ h1 {
 }
 .header-content h1 {
   font-size: 9vb;
+  margin-top: 20px;
   margin-bottom: 0;
   color: var(--light-color);
 }
@@ -141,4 +140,19 @@ ul {
   margin: 20px;
   list-style-type: none;
   line-height: 1.5;
+}
+
+.recipe-buttons{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-end;
+  margin-top: auto;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+@media screen and (max-width: 756px){
+  .header-content h1 {
+    font-size: 6vb;
+  }
 }

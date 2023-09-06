@@ -28,7 +28,7 @@ def register():
     if form.validate_on_submit():
         # encrypt password
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username = form.username.data, email = form.email.data, password = hashed_password)
+        user = User(username = form.username.data, email = form.email.data.lower(), password = hashed_password)
         # add user to database
         db.session.add(user)
         db.session.commit()
@@ -47,7 +47,7 @@ def login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+        user = User.query.filter_by(email=form.email.data.lower()).first()
         # ensure user exists and password is correct
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
@@ -78,7 +78,7 @@ def library():
 
 @app.route('/form', methods =["GET", "POST"])
 def getFormData():
-    session_keys = ['protein', 'cals', 'ingredients', 'servings', 'cuisine', 'recipe']
+    session_keys = ['protein', 'cals', 'ingredients', 'servings', 'cuisine', 'dish', 'recipe', 'allergies']
     for key in session_keys:
         if key in session:
             session.pop(key)
@@ -90,6 +90,8 @@ def getFormData():
         session['ingredients'] = request.form.get("ingredients")
         session['servings'] = request.form.get("servings")
         session['cuisine'] = request.form.get("cuisine")
+        session['dish'] = request.form.get("dish")
+        session['allergies'] = request.form.get("allergies")
 
         redirect_url = url_for('getGPTResponse')
         # Redirect to the GPT response page using loading.js, need it in json format
@@ -136,7 +138,7 @@ def parse_instructions(instructions):
     return re.split('\s(?=\d+\.)', instructions)
 
 
-protein, cals, ingredients, servings, cuisine = '', '', '', '', ''
+protein, cals, ingredients, servings, cuisine, dish = '', '', '', '', '', ''
 
 # recipe page route
 @app.route('/recipe', methods =["GET", "POST"])
@@ -145,12 +147,14 @@ def getGPTResponse():
     print(session)
     # Get the form data from the session variables, add optional fields if not provided
     protein = session.get('protein', 'any')
-    cals = session.get('cals', 'any')
+    cals = session.get('calories', 'any')
+    dish = session.get('dish', 'any')
     ingredients = session.get('ingredients', 'any')
     servings = session.get('servings', 1)
     cuisine = session.get('cuisine', 'any')
+    allergies = session.get('allergies', 'any')
     # Prompt for the GPT-3.5 API
-    prompt = f"Hello. I want {servings} servings of {cuisine} cuisine. I want around {protein} grams of protein, and around {cals} calories. I want {ingredients} ingredients included. If I include any ingredients make sure they are incorportaed in the dish. "
+    prompt = f"Hello. I want {servings} servings of {cuisine} {dish}. I want around {protein} grams of protein, and around {cals} calories. I want {ingredients} ingredients included. If I include any ingredients make sure they are incorportaed in the dish. If I include allergies, make sure to not include {allergies} in the ingredients."
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
@@ -188,7 +192,10 @@ def getGPTResponse():
             'nutrition_facts': nutrition_facts,
             'image_url': image_url
         }
-
+    if recipe_data is None or recipe_data['name'] is None or recipe_data['ingredients'] is None or recipe_data['directions'] is None or recipe_data['nutrition_facts'] is None:
+        flash('No recipe to add to the library. Please generate a recipe first.', 'warning')
+        print('recipe data DNE')
+        return redirect(url_for('getFormData'))    
     session['recipe'] = recipe_data
     return render_template('recipe.html',ingredients=ingredientsList, name=name , directions=instructionsList, nutrition_facts=nutrition_facts, image_url=image_url)
 

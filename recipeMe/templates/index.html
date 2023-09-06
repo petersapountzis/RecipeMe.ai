@@ -1,8 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5VH6B40RYQ"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-5VH6B40RYQ');
+    </script>
     <title>Macro Calculator</title>
-    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="width=device-width, initial-scale=1, user-scalable= no" name="viewport",  />
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='style.css') }}"
@@ -15,6 +24,7 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='header.css') }}"
     />
+    <link rel="icon" href=" {{ url_for('static', filename='images/recipeme-logo2.png') }} " type="image/x-icon" />
   </head>
   <body>
     <div id="original-content">
@@ -32,6 +42,23 @@
         </nav>
       </header>
       <div class="wrapper">
+        <div id="popup" class="popup hidden">
+          <p id="popupMessage">Recipe could not be regenerated.</p>
+        </div>
+        <script>
+          // Function to show the pop-up
+          function showPopup() {
+            const popup = document.getElementById('popup');
+            const popupMessage = document.getElementById('popupMessage');
+            popupMessage.textContent = 'Recipe could not be regenerated.';
+            popup.classList.remove('hidden');
+            setTimeout(() => {
+                popup.classList.add('hidden');
+            }, 5000);
+          }
+          // Call the function to show the pop-up after the redirect
+          showPopup();
+        </script> 
         <div class="container">
           <h2>Generate a Recipe!</h2>
           <h4>All fields are optional.</h4>
@@ -48,6 +75,15 @@
                 id="cuisine"
                 name="cuisine"
                 placeholder="Enter cuisine of choice"
+              />
+            </div>
+            <div class="input-group">
+              <label for="dish">Dish:</label>
+              <input
+                type="text"
+                id="dish"
+                name="dish"
+                placeholder="Enter dish (Salad, Cake, Wrap, etc.)"
               />
             </div>
             <div class="input-group">
@@ -84,6 +120,15 @@
                 id="calories"
                 name="calories"
                 placeholder="Enter calorie goal"
+              />
+            </div>
+            <div class="input-group">
+              <label for="allergies">Allergies:</label>
+              <input
+                type="text"
+                id="allergies"
+                name="allergies"
+                placeholder="Enter any allergies"
               />
             </div>
             <button class="btn">Generate</button>

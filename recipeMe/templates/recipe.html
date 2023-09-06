@@ -1,9 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5VH6B40RYQ"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-5VH6B40RYQ');
+    </script>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
@@ -19,13 +29,7 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='header.css') }}"
     />
-    <!-- <style>
-      #header {
-        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("images/food2.jpeg") center/cover no-repeat fixed;
-        justify-content: space-between;
-        align-items: center;
-      }
-    </style> -->
+    <link rel="icon" href=" {{ url_for('static', filename='images/recipeme-logo2.png') }} " type="image/x-icon" />
     <title>Recipe</title>
   </head>
   <body>
@@ -45,7 +49,7 @@
     <!-- header -->
     <header
       id="header"
-      class="vh-100 flex"
+      class="vh-100"
       style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ image_url }}') center/cover no-repeat fixed;"
     >
       <div class="container">
@@ -53,40 +57,14 @@
           <h1>{{ name }}</h1>
         </div>
         <!-- <a href="{{ url_for('getFormData') }}" target="_blank"> -->
-        <form action="/add_to_library" method="post">
-          <button
-            style="
-              border-radius: 20px;
-              width: 150px;
-              height: 50px;
-              border: none;
-              background-color: #c8b6a6;
-              color: white;
-              font-size: 16px;
-              font-family: 'Poppins', sans-serif;
-            "
-            type="submit"
-          >
-            Add to Library
-          </button>
-        </form>
-        <form action="/regenerate" method="post">
-          <button
-            style="
-              border-radius: 20px;
-              width: 150px;
-              height: 50px;
-              border: none;
-              background-color: #c8b6a6;
-              color: white;
-              font-size: 16px;
-              font-family: 'Poppins', sans-serif;
-            "
-            type="submit"
-          >
-            Regenerate
-          </button>
-        </form>
+        <div class="recipe-buttons">
+          <form action="/add_to_library" method="post">
+            <button type="submit">Add to Library</button>
+          </form>
+          <form action="/regenerate" method="post">
+            <button class="regenerate-button" type="submit">Regenerate</button>
+          </form>
+        </div>
       </div>
     </header>
     <main>
