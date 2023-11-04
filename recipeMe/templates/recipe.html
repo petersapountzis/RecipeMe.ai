@@ -2,13 +2,18 @@
 <html lang="en">
   <head>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5VH6B40RYQ"></script>
-        <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-5VH6B40RYQ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-        gtag('config', 'G-5VH6B40RYQ');
+      gtag("config", "G-5VH6B40RYQ");
     </script>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -29,7 +34,11 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='header.css') }}"
     />
-    <link rel="icon" href=" {{ url_for('static', filename='images/recipeme-logo2.png') }} " type="image/x-icon" />
+    <link
+      rel="icon"
+      href=" {{ url_for('static', filename='images/recipeme-logo2.png') }} "
+      type="image/x-icon"
+    />
     <title>Recipe</title>
   </head>
   <body>

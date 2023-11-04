@@ -156,7 +156,7 @@ def getGPTResponse():
     # Prompt for the GPT-3.5 API
     prompt = f"Hello. I want {servings} servings of {cuisine} {dish}. I want around {protein} grams of protein, and around {cals} calories. I want {ingredients} ingredients included. If I include any ingredients make sure they are incorportaed in the dish. If I include allergies, make sure to not include {allergies} in the ingredients."
     completion = openai.ChatCompletion.create(
-        model="gpt-4",
+        model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are a meal generator. I am a user who wants a recipe. I will give you OPTIONAL information about what I want in my recipe. If no servings are specified, assume just 1 serving. For all other fields, if no data is provided, you have jurisdiction over it. I want you to create a recipe for me. It should be a singular recipe. I want a name for the recipe that is as appetizing and professional as possible, labeled before and after with ##Name##. For example: ##Name## Chicken Curry ##Name##, this will follow the same pattern for all other sections. I want an ingredients section surrounded by ##Ingredients## tag where each ingredient is separated by comma, a directions section surrouned ##Directions## tag, and a nutrition facts section surrounded ##Nutrition Facts## tag."},
             {"role": "user", "content": prompt}
@@ -219,6 +219,7 @@ def add_to_library():
         nutrition_facts=recipe_data['nutrition_facts'], 
         user_id=current_user.id,
         image_url=recipe_data['image_url'])
+    
     
     # add recipe to DB if clicked
     db.session.add(recipe)
