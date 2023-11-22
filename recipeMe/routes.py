@@ -102,7 +102,7 @@ def getFormData():
 
 # Helper function to extract the recipe name, ingredients, directions, and nutrition facts from the GPT response
 def extract_recipe_info(recipe_string):
-    name_pattern = r"##Name##(.*?)##Name##"
+    name_pattern = r"##(.*?)##"
     ingredients_pattern = r"##Ingredients##(.*?)##Directions##"
     directions_pattern = r"##Directions##(.*?)##Nutrition Facts##"
     nutrition_facts_pattern = r"##Nutrition Facts##(.*)"
@@ -112,7 +112,7 @@ def extract_recipe_info(recipe_string):
     directions_match = re.search(directions_pattern, recipe_string, re.DOTALL)
     nutrition_facts_match = re.search(nutrition_facts_pattern, recipe_string, re.DOTALL)
 
-    recipe_name = name_match.group(1).strip() if name_match else None
+    recipe_name = name_match.group(1).strip() if name_match else "No Name Found"
     ingredients = ingredients_match.group(1).strip() if ingredients_match else None
     directions = directions_match.group(1).strip() if directions_match else None
     nutrition_facts = nutrition_facts_match.group(1).strip() if nutrition_facts_match else None
@@ -120,22 +120,33 @@ def extract_recipe_info(recipe_string):
     return recipe_name, ingredients, directions, nutrition_facts
 
 
-# Helper function to convert the ingredients string to a list
-def ingredients_to_list(ingredients):
-    if ingredients is None:
-        return []
-    # Split the string by commas and strip whitespaces
-    ingredients_list = [ingredient.strip() for ingredient in ingredients.split('-')]
-    ingredients_list = ingredients_list[1:]
-    return ingredients_list
+# # Helper function to convert the ingredients string to a list
+# def ingredients_to_list(ingredients):
+#     if ingredients is None:
+#         return []
+#     # Split the string by commas and strip whitespaces
+#     ingredients_list = [ingredient.strip() for ingredient in ingredients.split('-')]
+#     ingredients_list = ingredients_list[1:]
+#     return ingredients_list
 
 
-# Helper function to parse the directions string into a list of instructions
-def parse_instructions(instructions):
-    if instructions is None:
+# # Helper function to parse the directions string into a list of instructions
+# def parse_instructions(instructions):
+#     if instructions is None:
+#         return []
+#     # Split by digit-period-space pattern, keep the digit and period with the instruction
+#     return re.split('\s(?=\d+\.)', instructions)
+
+def ingredients_to_list(ingredients_str):
+    if not ingredients_str or "No Ingredients Found" in ingredients_str:
         return []
-    # Split by digit-period-space pattern, keep the digit and period with the instruction
-    return re.split('\s(?=\d+\.)', instructions)
+    # Adjusted to split by newline as each ingredient is on a new line
+    return [ingredient.strip() for ingredient in ingredients_str.split('\n') if ingredient.strip()]
+def parse_instructions(directions_str):
+    if not directions_str or "No Directions Found" in directions_str:
+        return []
+    # Assuming each step is in a new line
+    return [step.strip() for step in directions_str.split('\n') if step.strip()]
 
 
 protein, cals, ingredients, servings, cuisine, dish = '', '', '', '', '', ''
@@ -153,18 +164,21 @@ def getGPTResponse():
     servings = session.get('servings', 1)
     cuisine = session.get('cuisine', 'any')
     allergies = session.get('allergies', 'any')
-    # Prompt for the GPT-3.5 API
-    prompt = f"Hello. I want {servings} servings of {cuisine} {dish}. I want around {protein} grams of protein, and around {cals} calories. I want {ingredients} ingredients included. If I include any ingredients make sure they are incorportaed in the dish. If I include allergies, make sure to not include {allergies} in the ingredients."
+    
+    system_message= "You are a meal generator programmed to create recipes. Generate a recipe following this structure: Start with the recipe name enclosed within ##Name## tags. List ingredients within ##Ingredients## tags, each ingredient separated by a newline. Provide directions within ##Directions## tags, each step on a new line and prefixed with a number. Conclude with nutrition facts within ##Nutrition Facts## tags. If the user does not provide specific details like ingredients or dish type, use common ingredients or suggest a popular dish. Ensure the response adheres to these formatting rules for easy parsing."
+    prompt = f"I want {servings} servings of {cuisine} {dish}, with around {protein} grams of protein and {cals} calories. Please include {ingredients} and exclude any allergens like {allergies}."
+
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "You are a meal generator. I am a user who wants a recipe. I will give you OPTIONAL information about what I want in my recipe. If no servings are specified, assume just 1 serving. For all other fields, if no data is provided, you have jurisdiction over it. I want you to create a recipe for me. It should be a singular recipe. I want a name for the recipe that is as appetizing and professional as possible, labeled before and after with ##Name##. For example: ##Name## Chicken Curry ##Name##, this will follow the same pattern for all other sections. I want an ingredients section surrounded by ##Ingredients## tag where each ingredient is separated by comma, a directions section surrouned ##Directions## tag, and a nutrition facts section surrounded ##Nutrition Facts## tag."},
+            {"role": "system", "content": system_message},
             {"role": "user", "content": prompt}
         ],
-        temperature=0.9
+        temperature=0.7
     )
     # parse json response for content
     cleaned_response = completion['choices'][0]['message']['content']
+    print(completion)
     name, GPTingredients, directions, nutrition_facts = extract_recipe_info(cleaned_response)
 
     # DALLE prompt
@@ -192,10 +206,10 @@ def getGPTResponse():
             'nutrition_facts': nutrition_facts,
             'image_url': image_url
         }
-    if recipe_data is None or recipe_data['name'] is None or recipe_data['ingredients'] is None or recipe_data['directions'] is None or recipe_data['nutrition_facts'] is None:
-        flash('No recipe to add to the library. Please generate a recipe first.', 'warning')
-        print('recipe data DNE')
-        return redirect(url_for('getFormData'))    
+    # if recipe_data is None or recipe_data['name'] is None or recipe_data['ingredients'] is None or recipe_data['directions'] is None or recipe_data['nutrition_facts'] is None:
+    #     flash('No recipe to add to the library. Please generate a recipe first.', 'warning')
+    #     print('recipe data DNE')
+    #     return redirect(url_for('getFormData'))    
     session['recipe'] = recipe_data
     return render_template('recipe.html',ingredients=ingredientsList, name=name , directions=instructionsList, nutrition_facts=nutrition_facts, image_url=image_url)
 
@@ -219,6 +233,7 @@ def add_to_library():
         nutrition_facts=recipe_data['nutrition_facts'], 
         user_id=current_user.id,
         image_url=recipe_data['image_url'])
+    
     
     # add recipe to DB if clicked
     db.session.add(recipe)
