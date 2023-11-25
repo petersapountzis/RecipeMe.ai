@@ -1,13 +1,17 @@
 from flask import request, render_template, session, url_for, redirect, flash, request, jsonify, make_response
-from recipeMe import app, db, bcrypt
+from recipeMe import app, db, bcrypt, celery
 from recipeMe.models import User, Recipe
 from recipeMe.login import RegistrationForm, LoginForm
-import openai
+from openai import OpenAI
+from . import celery
+
+
 import re
 from flask_login import login_user, current_user, logout_user, login_required
 import json
 import pdfkit
 import os
+import time
 
 # path_wkhtmltopdf = os.environ.get('WKHTMLTOPDF_BINARY', '/usr/local/bin/wkhtmltopdf')
 # config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
@@ -76,43 +80,52 @@ def library():
 
 
 
-@app.route('/form', methods =["GET", "POST"])
+@app.route('/form', methods=["GET", "POST"])
 def getFormData():
-    session_keys = ['protein', 'cals', 'ingredients', 'servings', 'cuisine', 'dish', 'recipe', 'allergies']
-    for key in session_keys:
-        if key in session:
-            session.pop(key)
-
     if request.method == 'POST':
         # Form has been submitted, store the data in session variables
-        session['protein'] = request.form.get("protein")
-        session['cals'] = request.form.get("calories")
-        session['ingredients'] = request.form.get("ingredients")
-        session['servings'] = request.form.get("servings")
-        session['cuisine'] = request.form.get("cuisine")
-        session['dish'] = request.form.get("dish")
-        session['allergies'] = request.form.get("allergies")
+        session['protein'] = request.form.get("protein", 'any')
+        session['cals'] = request.form.get("calories", 'any')
+        session['ingredients'] = request.form.get("ingredients", 'any')
+        session['servings'] = request.form.get("servings", 1)
+        session['cuisine'] = request.form.get("cuisine", 'any')
+        session['dish'] = request.form.get("dish", 'any')
+        session['allergies'] = request.form.get("allergies", 'any')
 
-        redirect_url = url_for('getGPTResponse')
-        # Redirect to the GPT response page using loading.js, need it in json format
-        return jsonify({"redirect_url": redirect_url})
-        
-    if request.method == 'GET':
-        return render_template('index.html')
+        # Start the Celery task for recipe generation
+        task = generate_recipe_task.delay(
+            session['protein'],
+            session['cals'],
+            session['ingredients'],
+            session['servings'],
+            session['cuisine'],
+            session['dish'],
+            session['allergies']
+        )
+
+        # Redirect to the waiting screen, passing the task ID
+        # redirect_url = url_for('waiting_screen', task_id=task.id)
+        # return jsonify({"redirect_url": redirect_url})
+        return redirect(url_for('getGPTResponse'))
+
+
+    # For a GET request, render and return the recipe request form
+    return render_template('index.html')
+
 
 # Helper function to extract the recipe name, ingredients, directions, and nutrition facts from the GPT response
 def extract_recipe_info(recipe_string):
-    name_pattern = r"##(.*?)##"
-    ingredients_pattern = r"##Ingredients##(.*?)##Directions##"
-    directions_pattern = r"##Directions##(.*?)##Nutrition Facts##"
-    nutrition_facts_pattern = r"##Nutrition Facts##(.*)"
+    name_pattern = r"##Name##\n(.*?)\n\n##Ingredients##" or r"##\n(.*?)\n\n##Directions##"
+    ingredients_pattern = r"##Ingredients##\n(.*?)\n\n##Directions##"
+    directions_pattern = r"##Directions##\n(.*?)\n\n##Nutrition Facts##"
+    nutrition_facts_pattern = r"##Nutrition Facts##\n(.*?)\n\n"
 
     name_match = re.search(name_pattern, recipe_string, re.DOTALL)
     ingredients_match = re.search(ingredients_pattern, recipe_string, re.DOTALL)
     directions_match = re.search(directions_pattern, recipe_string, re.DOTALL)
     nutrition_facts_match = re.search(nutrition_facts_pattern, recipe_string, re.DOTALL)
 
-    recipe_name = name_match.group(1).strip() if name_match else "No Name Found"
+    recipe_name = name_match.group(1).strip() if name_match else None
     ingredients = ingredients_match.group(1).strip() if ingredients_match else None
     directions = directions_match.group(1).strip() if directions_match else None
     nutrition_facts = nutrition_facts_match.group(1).strip() if nutrition_facts_match else None
@@ -151,67 +164,111 @@ def parse_instructions(directions_str):
 
 protein, cals, ingredients, servings, cuisine, dish = '', '', '', '', '', ''
 
-# recipe page route
-@app.route('/recipe', methods =["GET", "POST"])
-def getGPTResponse():
-    openai.api_key = os.environ.get('API_KEY_OPENAI')
-    print(session)
-    # Get the form data from the session variables, add optional fields if not provided
-    protein = session.get('protein', 'any')
-    cals = session.get('calories', 'any')
-    dish = session.get('dish', 'any')
-    ingredients = session.get('ingredients', 'any')
-    servings = session.get('servings', 1)
-    cuisine = session.get('cuisine', 'any')
-    allergies = session.get('allergies', 'any')
-    
+@celery.task
+def generate_recipe_task(protein, cals, dish, ingredients, servings, cuisine, allergies):
+    OPENAI_KEY = app.config.get('API_KEY_OPENAI')
+    client = OpenAI(api_key=OPENAI_KEY)  # this is also the default, it can be omitted
+
+    print('test hello')
+    print('hello ')
+    print('api call starting')
+    print(OPENAI_KEY)
+
     system_message= "You are a meal generator programmed to create recipes. Generate a recipe following this structure: Start with the recipe name enclosed within ##Name## tags. List ingredients within ##Ingredients## tags, each ingredient separated by a newline. Provide directions within ##Directions## tags, each step on a new line and prefixed with a number. Conclude with nutrition facts within ##Nutrition Facts## tags. If the user does not provide specific details like ingredients or dish type, use common ingredients or suggest a popular dish. Ensure the response adheres to these formatting rules for easy parsing."
     prompt = f"I want {servings} servings of {cuisine} {dish}, with around {protein} grams of protein and {cals} calories. Please include {ingredients} and exclude any allergens like {allergies}."
-
-    completion = openai.ChatCompletion.create(
+    full_prompt = system_message + '\n' + prompt
+    try:
+        completion = client.chat.completions.create( 
+            messages=
+            [{
+            "role": "system",
+            "content": system_message
+        },
+        {
+            "role": "user",
+            "content": prompt
+        }],
         model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": system_message},
-            {"role": "user", "content": prompt}
-        ],
-        temperature=0.7
-    )
-    # parse json response for content
-    cleaned_response = completion['choices'][0]['message']['content']
-    print(completion)
+            temperature=0.5
+        )
+        print('API call made')
+        cleaned_response = completion.choices[0].message.content.strip()
+        # Process the response_text as needed
+    except Exception as e:
+        print("Error in OpenAI API call:", e)
+        raise
     name, GPTingredients, directions, nutrition_facts = extract_recipe_info(cleaned_response)
 
     # DALLE prompt
     image_prompt = f'Generate a high-resolution image of a freshly prepared dish. The dish is a {name}. It is plated on a white, ceramic dish, placed on a rustic wooden table. The lighting should highlight the textures and colors of the dish, making it look appetizing and ready to eat.  In the background, slightly out of focus, there should be a bottle of red wine and a lit candle to create a warm, cozy atmosphere.'
 
-    image = openai.Image.create(
-        prompt=image_prompt,
-        n=1,
-        size="1024x1024"
-    )
-    image_url = image['data'][0]['url']
-    
-    # Convert the ingredients and directions string to a list
-    ingredientsList = ingredients_to_list(GPTingredients)
-    instructionsList = parse_instructions(directions)
-    
-    json_ingredients = {
-        "ingredients": json.dumps(ingredientsList)
-    }
+    image = client.images.generate(prompt=image_prompt,
+    n=1,
+    size="1024x1024")
+    image_url = image.data[0].url
 
     recipe_data = {
-            'name': name,
-            'ingredients': ingredientsList,
-            'directions': instructionsList,
-            'nutrition_facts': nutrition_facts,
-            'image_url': image_url
-        }
-    # if recipe_data is None or recipe_data['name'] is None or recipe_data['ingredients'] is None or recipe_data['directions'] is None or recipe_data['nutrition_facts'] is None:
-    #     flash('No recipe to add to the library. Please generate a recipe first.', 'warning')
-    #     print('recipe data DNE')
-    #     return redirect(url_for('getFormData'))    
-    session['recipe'] = recipe_data
-    return render_template('recipe.html',ingredients=ingredientsList, name=name , directions=instructionsList, nutrition_facts=nutrition_facts, image_url=image_url)
+        'name': name,
+        'ingredients': ingredients_to_list(GPTingredients),
+        'directions': parse_instructions(directions),
+        'nutrition_facts': nutrition_facts,
+        'image_url': image_url
+    }
+
+    return recipe_data
+
+
+
+@app.route('/recipe', methods=["GET", "POST"])
+def getGPTResponse():
+    if request.method == 'POST':
+        # Get form data
+        protein = session.get('protein', 'any')
+        cals = session.get('calories', 'any')
+        dish = session.get('dish', 'any')
+        ingredients = session.get('ingredients', 'any')
+        servings = session.get('servings', 1)
+        cuisine = session.get('cuisine', 'any')
+        allergies = session.get('allergies', 'any')
+
+        # Start the Celery task
+        print('starting celery task')
+        task = generate_recipe_task.delay(protein, cals, dish, ingredients, servings, cuisine, allergies)
+
+        # Redirect to a waiting screen
+        redirect_url = url_for('waiting_screen', task_id=task.id)
+        return jsonify({"redirect_url": redirect_url})
+    
+    return render_template('index.html')
+
+
+@app.route('/waiting/<task_id>')
+def waiting_screen(task_id):
+    return render_template('waiting_screen.html', task_id=task_id)
+
+@app.route('/status/<task_id>')
+def task_status(task_id):
+    task = generate_recipe_task.AsyncResult(task_id)
+
+    if task.state == 'PENDING':
+        return jsonify({'state': task.state, 'status': 'Pending...'})
+    elif task.state != 'FAILURE':
+        if task.state == 'SUCCESS':
+            # Render the recipe page with the task result
+            return render_template('recipe.html', **task.result)
+        return jsonify({'state': task.state, 'status': 'In Progress...'})
+    else:
+        return jsonify({'state': task.state, 'status': 'Failed', 'error': str(task.info)})
+
+
+
+@app.route('/recipe/show/<task_id>')
+def show_recipe(task_id):
+    task = generate_recipe_task.AsyncResult(task_id)
+    if task.state == 'SUCCESS':
+        # Assuming the task result is the recipe data
+        return render_template('recipe.html', **task.result)
+    # Handle other states or errors as needed
 
 
 @app.route('/add_to_library', methods=['POST'])
@@ -294,3 +351,4 @@ def export_recipe(recipe_id):
 def regenerate():
     # Re-generate a new recipe using GPT
     return redirect(url_for('getGPTResponse'))
+

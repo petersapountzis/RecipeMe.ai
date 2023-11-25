@@ -1,0 +1,24 @@
+<!-- waiting_screen.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Recipe Generation</title>
+    <script type="text/javascript">
+      function checkStatus() {
+        fetch("/status/{{ task_id }}")
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.state === "SUCCESS") {
+              // Redirect to the recipe display route
+              window.location.href = "/recipe/show/" + "{{ task_id }}";
+            }
+          });
+      }
+
+      setInterval(checkStatus, 4000); // Poll every 5 seconds
+    </script>
+  </head>
+  <body>
+    <h1>Your recipe is generating, please wait a moment.</h1>
+  </body>
+</html>

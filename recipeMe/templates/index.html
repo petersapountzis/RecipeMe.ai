@@ -2,16 +2,25 @@
 <html>
   <head>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5VH6B40RYQ"></script>
-        <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-5VH6B40RYQ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-        gtag('config', 'G-5VH6B40RYQ');
+      gtag("config", "G-5VH6B40RYQ");
     </script>
     <title>Macro Calculator</title>
-    <meta content="width=device-width, initial-scale=1, user-scalable= no" name="viewport",  />
+    <meta
+      content="width=device-width, initial-scale=1, user-scalable= no"
+      name="viewport"
+      ,
+    />
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='style.css') }}"
@@ -24,7 +33,11 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='header.css') }}"
     />
-    <link rel="icon" href=" {{ url_for('static', filename='images/recipeme-logo2.png') }} " type="image/x-icon" />
+    <link
+      rel="icon"
+      href=" {{ url_for('static', filename='images/recipeme-logo2.png') }} "
+      type="image/x-icon"
+    />
   </head>
   <body>
     <div id="original-content">
@@ -48,24 +61,24 @@
         <script>
           // Function to show the pop-up
           function showPopup() {
-            const popup = document.getElementById('popup');
-            const popupMessage = document.getElementById('popupMessage');
-            popupMessage.textContent = 'Recipe could not be regenerated.';
-            popup.classList.remove('hidden');
+            const popup = document.getElementById("popup");
+            const popupMessage = document.getElementById("popupMessage");
+            popupMessage.textContent = "Recipe could not be regenerated.";
+            popup.classList.remove("hidden");
             setTimeout(() => {
-                popup.classList.add('hidden');
+              popup.classList.add("hidden");
             }, 5000);
           }
           // Call the function to show the pop-up after the redirect
           showPopup();
-        </script> 
+        </script>
         <div class="container">
           <h2>Generate a Recipe!</h2>
           <h4>All fields are optional.</h4>
           <form
             id="my-form"
             class="my-form"
-            action="{{ url_for('getFormData') }}"
+            action="{{ url_for('getGPTResponse') }}"
             method="post"
           >
             <div class="input-group">
