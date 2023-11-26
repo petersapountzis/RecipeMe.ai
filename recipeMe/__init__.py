@@ -20,12 +20,13 @@ login_manager.login_view = 'login'
 
 from .celery_utils import make_celery
 
-app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0' # or your Redis URL
+redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+app.config['CELERY_BROKER_URL'] = redis_url # or your Redis URL
+app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
 app.config['API_KEY_OPENAI'] = os.getenv('API_KEY_OPENAI')
 
-
 # Initialize Celery
-celery = make_celery(app.name, app.config['CELERY_BROKER_URL'])
+celery = make_celery(app)
 
 # Import routes after initializing Celery to avoid circular imports
 from . import routes

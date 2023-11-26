@@ -236,6 +236,7 @@ def getGPTResponse():
         task = generate_recipe_task.delay(protein, cals, dish, ingredients, servings, cuisine, allergies)
 
         # Redirect to a waiting screen
+        print('task id: ', task.id)
         redirect_url = url_for('waiting_screen', task_id=task.id)
         return jsonify({"redirect_url": redirect_url})
     
@@ -255,7 +256,7 @@ def task_status(task_id):
     elif task.state != 'FAILURE':
         if task.state == 'SUCCESS':
             # Render the recipe page with the task result
-            return render_template('recipe.html', **task.result)
+            return jsonify({'state': task.state, 'status': 'SUCCESS', 'result': task.result})
         return jsonify({'state': task.state, 'status': 'In Progress...'})
     else:
         return jsonify({'state': task.state, 'status': 'Failed', 'error': str(task.info)})
