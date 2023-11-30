@@ -1,0 +1,29 @@
+<!-- waiting_screen.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Recipe Generation</title>
+    <script type="text/javascript">
+      function checkStatus() {
+        console.log("Checking task status"); // Debugging log
+        fetch("/status/{{ task_id }}")
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Task data:", data); // Debugging log
+            if (data.state === "SUCCESS") {
+              console.log("Task successful, redirecting..."); // Debugging log
+              window.location.href = "/recipe/show/" + "{{ task_id }}"; // Redirect to the correct URL
+            }
+          })
+          .catch((error) => {
+            console.error("Error checking task status:", error); // Error handling
+          });
+      }
+
+      setInterval(checkStatus, 4000); // Poll every 4 seconds
+    </script>
+  </head>
+  <body>
+    <h1>Your recipe is generating, please wait a moment.</h1>
+  </body>
+</html>
