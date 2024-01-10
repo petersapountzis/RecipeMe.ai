@@ -22,7 +22,7 @@ from .celery_utils import make_celery
 
 redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
 app.config['CELERY_BROKER_URL'] = redis_url # or your Redis URL
-app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
+app.config['result_backend'] = 'redis://localhost:6379/0'
 app.config['API_KEY_OPENAI'] = os.getenv('API_KEY_OPENAI')
 
 # Initialize Celery
