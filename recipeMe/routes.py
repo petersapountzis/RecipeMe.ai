@@ -169,8 +169,6 @@ def generate_recipe_task(protein, cals, dish, ingredients, servings, cuisine, al
     OPENAI_KEY = app.config.get('API_KEY_OPENAI')
     client = OpenAI(api_key=OPENAI_KEY)  # this is also the default, it can be omitted
 
-    print('test hello')
-    print('hello ')
     print('api call starting')
     print(OPENAI_KEY)
 
