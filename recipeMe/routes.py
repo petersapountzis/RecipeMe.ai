@@ -83,7 +83,16 @@ def library():
 @app.route('/form', methods=["GET", "POST"])
 def getFormData():
     if request.method == 'POST':
-        # Form has been submitted, store the data in session variables
+        print('a request has been posted')
+        session.pop('protein', None)
+        session.pop('cals', None)
+        session.pop('ingredients', None)
+        session.pop('servings', None)
+        session.pop('cuisine', None)
+        session.pop('dish', None)
+        session.pop('allergies', None)
+
+        # Now store the new data in session variables
         session['protein'] = request.form.get("protein", 'any')
         session['cals'] = request.form.get("calories", 'any')
         session['ingredients'] = request.form.get("ingredients", 'any')
@@ -91,6 +100,8 @@ def getFormData():
         session['cuisine'] = request.form.get("cuisine", 'any')
         session['dish'] = request.form.get("dish", 'any')
         session['allergies'] = request.form.get("allergies", 'any')
+
+        print(session['cuisine'])
 
         # Start the Celery task for recipe generation
         task = generate_recipe_task.delay(
@@ -109,16 +120,17 @@ def getFormData():
         return redirect(url_for('getGPTResponse'))
 
 
+
     # For a GET request, render and return the recipe request form
     return render_template('index.html')
 
 
 # Helper function to extract the recipe name, ingredients, directions, and nutrition facts from the GPT response
 def extract_recipe_info(recipe_string):
-    name_pattern = r"##Name##\n(.*?)\n\n##Ingredients##" or r"##\n(.*?)\n\n##Directions##"
-    ingredients_pattern = r"##Ingredients##\n(.*?)\n\n##Directions##"
-    directions_pattern = r"##Directions##\n(.*?)\n\n##Nutrition Facts##"
-    nutrition_facts_pattern = r"##Nutrition Facts##\n(.*?)\n\n"
+    name_pattern = r"##Name##\n(.*?)\n##Name##"
+    ingredients_pattern = r"##Ingredients##\n(.*?)\n##Ingredients##"
+    directions_pattern = r"##Directions##\n(.*?)\n##Directions##"
+    nutrition_facts_pattern = r"##Nutrition Facts##\n(.*?)(\n##|$)"
 
     name_match = re.search(name_pattern, recipe_string, re.DOTALL)
     ingredients_match = re.search(ingredients_pattern, recipe_string, re.DOTALL)
@@ -169,14 +181,15 @@ def generate_recipe_task(protein, cals, dish, ingredients, servings, cuisine, al
     OPENAI_KEY = app.config.get('API_KEY_OPENAI')
     client = OpenAI(api_key=OPENAI_KEY)  # this is also the default, it can be omitted
 
-    print('test hello')
-    print('hello ')
     print('api call starting')
-    print(OPENAI_KEY)
 
-    system_message= "You are a meal generator programmed to create recipes. Generate a recipe following this structure: Start with the recipe name enclosed within ##Name## tags. List ingredients within ##Ingredients## tags, each ingredient separated by a newline. Provide directions within ##Directions## tags, each step on a new line and prefixed with a number. Conclude with nutrition facts within ##Nutrition Facts## tags. If the user does not provide specific details like ingredients or dish type, use common ingredients or suggest a popular dish. Ensure the response adheres to these formatting rules for easy parsing."
-    prompt = f"I want {servings} servings of {cuisine} {dish}, with around {protein} grams of protein and {cals} calories. Please include {ingredients} and exclude any allergens like {allergies}."
-    full_prompt = system_message + '\n' + prompt
+
+
+    system_message = f'Create a recipe based on the following specifications: Recipe Name: Enclose within ##Name## tags. Ingredients: List within ##Ingredients## tags, each on a new line. Directions: Provide within ##Directions## tags, each step on a new line and prefixed with a number. Nutrition Facts: Conclude with these details within ##Nutrition Facts## tags. User Specifications for this recipe: Servings: {servings} Cuisine: {cuisine} Dish Type: {dish} Protein Content: {protein} grams Calorie Count: {cals} calories Required Ingredients: {ingredients} Allergens to Exclude: {allergies}. If any of these specifications are left blank, you can choose whatever you want, but if anything is specified be sure you take it into consideration. Format the response to adhere to the specified structure for easy parsing.'
+    system_example = 'I am going to give you an example of what I want the format to look like:     ##Name##Chicken Stir-Fry##Name####Ingredients##- 2 chicken breasts, thinly sliced- 1 onion, sliced- 1 bell pepper, sliced- 2 cloves garlic, minced##Directions##1. In a large skillet or wok, heat the vegetable oil over medium-high heat.2. Add the chicken slices and cook until lightly browned. Remove from the skillet and set aside'
+    # system_message= "You are a meal generator programmed to create recipes. Generate a recipe following this structure: Start with the recipe name enclosed within ##Name## tags. List ingredients within ##Ingredients## tags, each ingredient separated by a newline. Provide directions within ##Directions## tags, each step on a new line and prefixed with a number. Conclude with nutrition facts within ##Nutrition Facts## tags. If the user does not provide specific details like ingredients or dish type, use common ingredients or suggest a popular dish. Ensure the response adheres to these formatting rules for easy parsing."
+    # prompt = f"I want {servings} servings of {cuisine} {dish}, with around {protein} grams of protein and {cals} calories. Please include {ingredients} and exclude any allergens like {allergies}."
+    # full_prompt = system_message + '\n' + prompt
     try:
         completion = client.chat.completions.create( 
             messages=
@@ -185,14 +198,15 @@ def generate_recipe_task(protein, cals, dish, ingredients, servings, cuisine, al
             "content": system_message
         },
         {
-            "role": "user",
-            "content": prompt
+            "role": "system",
+            "content": system_example
         }],
-        model="gpt-3.5-turbo",
-            temperature=0.5
+        model="gpt-4-1106-preview",
+            temperature=0.1
         )
         print('API call made')
         cleaned_response = completion.choices[0].message.content.strip()
+        print(cleaned_response)
         # Process the response_text as needed
     except Exception as e:
         print("Error in OpenAI API call:", e)
@@ -221,26 +235,26 @@ def generate_recipe_task(protein, cals, dish, ingredients, servings, cuisine, al
 
 @app.route('/recipe', methods=["GET", "POST"])
 def getGPTResponse():
-    if request.method == 'POST':
-        # Get form data
-        protein = session.get('protein', 'any')
-        cals = session.get('calories', 'any')
-        dish = session.get('dish', 'any')
-        ingredients = session.get('ingredients', 'any')
-        servings = session.get('servings', 1)
-        cuisine = session.get('cuisine', 'any')
-        allergies = session.get('allergies', 'any')
 
-        # Start the Celery task
-        print('starting celery task')
-        task = generate_recipe_task.delay(protein, cals, dish, ingredients, servings, cuisine, allergies)
+    # Get form data
+    protein = session.get('protein', 'any')
+    cals = session.get('calories', 'any')
+    dish = session.get('dish', 'any')
+    ingredients = session.get('ingredients', 'any')
+    servings = session.get('servings', 1)
+    cuisine = session.get('cuisine', 'any')
+    allergies = session.get('allergies', 'any')
 
-        # Redirect to a waiting screen
-        print('task id: ', task.id)
-        redirect_url = url_for('waiting_screen', task_id=task.id)
-        return jsonify({"redirect_url": redirect_url})
+    # Start the Celery task
+    print('starting celery task')
+    task = generate_recipe_task.delay(protein, cals, dish, ingredients, servings, cuisine, allergies)
+
+    # Redirect to a waiting screen
+    print('task id: ', task.id)
+    redirect_url = url_for('waiting_screen', task_id=task.id)
+    return jsonify({"redirect_url": redirect_url})
     
-    return render_template('index.html')
+   
 
 
 @app.route('/waiting/<task_id>')

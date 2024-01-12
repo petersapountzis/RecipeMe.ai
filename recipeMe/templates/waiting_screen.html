@@ -22,8 +22,12 @@
 
       setInterval(checkStatus, 4000); // Poll every 4 seconds
     </script>
+    <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='load.css') }}"
+    />
   </head>
   <body>
-    <h1>Your recipe is generating, please wait a moment.</h1>
+    <div class="spinner"></div>
   </body>
 </html>
