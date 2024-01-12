@@ -20,7 +20,7 @@ login_manager.login_view = 'login'
 
 from .celery_utils import make_celery
 
-redis_url = os.getenv('REDIS_URL')
+redis_url =  'redis://localhost:6379/0' # os.getenv('REDIS_URL')
 app.config['CELERY_BROKER_URL'] = redis_url # or your Redis URL
 app.config['result_backend'] = redis_url
 app.config['broker_connection_retry_on_startup'] = True
